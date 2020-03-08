@@ -1,0 +1,20 @@
+target/
+bin/
+!.mvn/wrapper/maven-wrapper.jar
+
+### Compiled Files ###
+*.class
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
