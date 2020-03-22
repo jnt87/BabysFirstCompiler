@@ -12,7 +12,7 @@ import java.util.Arrays;
 // Please see page 241 of the book for  psuedo code
 public class IRCFG extends GraphStructure {
     //debug flag
-    public final Boolean DEBUG = true;
+    public final Boolean DEBUG = false;
     //list of the leaders of blocks - where should this be implemented?
     public IRProgram program;
     public List<IRInstruction> leaders;

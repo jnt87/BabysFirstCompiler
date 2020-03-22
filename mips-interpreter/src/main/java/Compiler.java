@@ -2,6 +2,8 @@ import ir.*;
 
 import java.io.PrintStream;
 import java.util.*;
+import mips.*;
+import mips.Translator;
 
 public class Compiler {
     public static void main(String[] args) throws Exception {
@@ -35,13 +37,13 @@ public class Compiler {
             //displayIRNodes(irCfg);
             DeadCode.reachingDefRewrite(irCfg);
             i++;
-            System.out.println("---------------Iteration Complete-------------------");
+            //System.out.println("---------------Iteration Complete-------------------");
         } while (DeadCode.change); //removed upper bound i < 10
 
-        System.out.println("**Instructions before**");
+        //System.out.println("**Instructions before**");
         for (IRFunction func : program.functions) {
         	for (IRInstruction ins : func.instructions) {
-        		System.out.println(ins);
+        		//System.out.println(ins);
         	}
         }
         
@@ -67,13 +69,13 @@ public class Compiler {
                 }
             }*/
             
-            System.out.println("**Instructions after**");
+            //System.out.println("**Instructions after**");
             for (IRFunction func : program.functions) {
                 for (IRInstruction ins : func.instructions) {
                     System.out.println(ins);
                 }
             }
-            System.out.println("_______________________");
+            //System.out.println("_______________________");
             
             // Second Stage Redunancy Elimination
             filePrinter.printProgram(program);
@@ -86,14 +88,17 @@ public class Compiler {
                 //displayIRNodes(irCfg);
                 DeadCode.reachingDefRewrite(irCfg2);
                 i++;
-                System.out.println("---------------Iteration Complete-------------------");
-                System.out.println("Op");
+                //System.out.println("---------------Iteration Complete-------------------");
+                //System.out.println("Op");
             } while (DeadCode.change); //removed upper bound i < 10
 
             filePrinter.printProgram(program2);
         } else {
             filePrinter.printProgram(program);
         }
+
+				Translator test = new Translator(program);
+				test.test();
     };
 
     public static void displayCFG(IRCFG cfg) {

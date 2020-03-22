@@ -93,7 +93,7 @@ public class DeadCode {
                     }
                 }                
             }
-            System.out.println("Complete One Function");
+            //System.out.println("Complete One Function");
         }
 
         for (IRNode root : rootList) {

@@ -242,10 +242,12 @@ public class Translator {
 		public String call(IRInstruction tigerir) {
 				String mips = "";
 				//alloc space
+				int size  = stack_size(tigerir.operands[0].getValue());
+				mips = mips + "\taddi $29, $29, -" + size + "\n";
 				//store temps
 				//bookkeeping
 				//params
-				mips = mips + "jal" + tigerir.operands[0] + "\n";
+				mips = mips + "\tjal " + tigerir.operands[0] + "\n";
 				return mips;
 		}
 
@@ -256,20 +258,49 @@ public class Translator {
 				//bookkeeping
 				//params
 				//empty rv
-				mips = mips + "jal" + tigerir.operands[0] + "\n";
+				mips = mips + "\tjal " + tigerir.operands[0] + "\n";
 				return mips;
 		}
 
 		public String astore(IRInstruction tigerir) {
 				String mips = "";
-				mips = mips + "addi t1, " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
-				mips = mips + "sw " + tigerir.operands[0] + ", t1\n";
+				mips = mips + "\taddi t1, " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+				mips = mips + "\tsw " + tigerir.operands[0] + ", t1\n";
 				return mips;
 		}
 		public String aload(IRInstruction tigerir) {
 				String mips = "";
-				mips = mips + "addi t1, " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
-				mips = mips + "lw " + tigerir.operands[0] + ", t1\n";
+				mips = mips + "\taddi t1, " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+				mips = mips + "\tlw " + tigerir.operands[0] + ", t1\n";
 				return mips;
+		}
+
+		public int stack_size(String func_name) {
+				int size = 0;
+				for(IRFunction f : this.program.functions) {
+						int temp = f.name.compareTo(func_name);
+						if (temp == 0)	{
+								//System.out.println("Params: ");
+								//for( IRVariableOperand par : f.parameters) {
+								//		System.out.println(par);
+								//}
+								//System.out.println("Vars: ");
+								for( IRVariableOperand var : f.variables) {
+										System.out.println(var);
+										System.out.println(var.type);
+										//if(var.type.toString().compareTo("int") != 0 | var.type.toString().compareTo("float") != 0){
+										if(var.type instanceof IRArrayType) {
+												System.out.println(var.getSize());
+										}
+								}
+								size = size + (f.variables.size() * 4); //local data
+								size = size + 4; //return value
+								
+						}
+				}
+				return size;
+		}
+		public int variable_size(IRVariableOperand var) {
+				return 0;
 		}
 }
