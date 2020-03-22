@@ -280,17 +280,17 @@ public class Translator {
 				for(IRFunction f : this.program.functions) {
 						int temp = f.name.compareTo(func_name);
 						if (temp == 0)	{
-								//System.out.println("Params: ");
-								//for( IRVariableOperand par : f.parameters) {
-								//		System.out.println(par);
-								//}
+								System.out.println("Params: ");
+								for( IRVariableOperand par : f.parameters) {
+										System.out.println(par);
+								}
 								//System.out.println("Vars: ");
 								for( IRVariableOperand var : f.variables) {
-										System.out.println(var);
+										System.out.print(var+"-->");
 										System.out.println(var.type);
 										//if(var.type.toString().compareTo("int") != 0 | var.type.toString().compareTo("float") != 0){
 										if(var.type instanceof IRArrayType) {
-												System.out.println(var.getSize());
+												System.out.println("Size: "+((IRArrayType)var.type).getSize());
 										}
 								}
 								size = size + (f.variables.size() * 4); //local data
