@@ -99,6 +99,10 @@ public class Compiler {
 
 				Translator test = new Translator(program);
 				test.test();
+				
+				RegisterGraph graph = new RegisterGraph();
+				graph.color(2);
+				System.out.println("Graph: "+graph);
     };
 
     public static void displayCFG(IRCFG cfg) {
@@ -157,4 +161,5 @@ public class Compiler {
             }
         }
     }
+    
 }
