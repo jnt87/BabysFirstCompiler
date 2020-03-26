@@ -11,17 +11,14 @@ public class RegisterGraph {
 	
 	//Hardcoded graph for testing
 	public RegisterGraph() {
-		RegisterNode node1 = new RegisterNode(1);
-		RegisterNode node2 = new RegisterNode(2);
-		RegisterNode node3 = new RegisterNode(3);
-		RegisterNode node4 = new RegisterNode(4);
+		RegisterNode node1 = new RegisterNode("$temp0");
+		RegisterNode node2 = new RegisterNode("$temp1");
+		RegisterNode node3 = new RegisterNode("$temp2");
 		
 		node1.addEdge(node2);
 		node1.addEdge(node3);
-		node2.addEdge(node4);
-		node4.addEdge(node3);
 		
-		this.nodes = new ArrayList<>(Arrays.asList(node1,node2,node3,node4));
+		this.nodes = new ArrayList<>(Arrays.asList(node1,node2,node3));
 		Collections.sort(this.nodes);
 		System.out.println("Graph before coloring: "+this);
 	}
@@ -29,6 +26,12 @@ public class RegisterGraph {
 	public RegisterGraph(ArrayList<RegisterNode> nodes) {
 		this.nodes = nodes;
 		Collections.sort(this.nodes);
+	}
+	
+	public String hardCodedAssembly() {
+		String assembly = new String();
+		assembly = assembly + "add $temp1, $x2, $x3\nadd $temp0, $x0, $x1\nmult $temp2, $temp1, $x4\nadd $y, $temp0, $temp2";
+		return assembly;
 	}
 	
 	public void addNewNode(RegisterNode newNode) {
@@ -57,5 +60,52 @@ public class RegisterGraph {
 			node.color = availableColor;
 		}
 		return false;
+	}
+	
+	//Replace registers
+	public String replaceRegisters(String assembly) {
+		String newAssembly = new String();
+		for (int ii = 0; ii<assembly.length(); ii++) {
+			if(assembly.charAt(ii)=='$') {
+				String registerName = getRegisterName(assembly,ii);
+				String newRegisterName = replaceName(registerName);
+				if (newRegisterName!=null) {
+					newAssembly = newAssembly + newRegisterName;
+					ii = ii + registerName.length();
+				}else {
+					newAssembly = newAssembly + '$';
+				}
+			}else {
+				newAssembly = newAssembly + assembly.charAt(ii);
+			}
+		}
+		return newAssembly;
+	}
+	
+	//Get the register name from the dollar character
+	public String getRegisterName(String assembly, int dollarIndex) {
+		String registerName = new String();
+		int i = dollarIndex+1;
+		while(true) {
+			if(i==assembly.length()) break;
+			if(assembly.charAt(i)!='\n' && assembly.charAt(i)!='\t' && assembly.charAt(i)!=',' && assembly.charAt(i)!=' ') {
+				registerName = registerName+assembly.charAt(i);
+				i++;
+			}else {
+				break;
+			}
+		}
+		return registerName;
+	}
+	
+	//Return the new name for the register
+	public String replaceName(String registerToReplace) {
+		for(RegisterNode node:this.nodes) {
+			if (node.register.equals("$"+registerToReplace)) {
+				return "$t"+node.color;
+			}
+		}
+		
+		return null;
 	}
 }

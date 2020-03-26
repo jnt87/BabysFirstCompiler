@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class RegisterNode implements Comparable{
 	
-	public int registerNumber;
+	public String register;
 	public int color = -1; //Set the color to uncolored
 	public ArrayList<RegisterNode> adjacentNodes;
 	public boolean visited;
 	
-	public RegisterNode(int registerNumber) {
-		this.registerNumber = registerNumber;
+	public RegisterNode(String register) {
+		this.register = register;
 		this.adjacentNodes = new ArrayList<>();
 		this.visited = false;
 	}
@@ -44,7 +44,7 @@ public class RegisterNode implements Comparable{
 	}
 	
 	public String toString() {
-		return this.registerNumber+" - "+this.color;
+		return this.register+" - "+this.color;
 	}
 
 	@Override

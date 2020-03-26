@@ -103,6 +103,9 @@ public class Compiler {
 				RegisterGraph graph = new RegisterGraph();
 				graph.color(2);
 				System.out.println("Graph: "+graph);
+				
+				System.out.println("Assembly:\n"+graph.hardCodedAssembly());
+				System.out.println("New assembly:\n"+graph.replaceRegisters(graph.hardCodedAssembly()));
     };
 
     public static void displayCFG(IRCFG cfg) {
