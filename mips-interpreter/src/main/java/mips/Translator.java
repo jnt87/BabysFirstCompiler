@@ -14,25 +14,48 @@ public class Translator {
 		public final boolean DEBUG = true;
 		public IRProgram program;
 		public List<String> LOC;
+		public String code;
 
 		public Translator(IRProgram program) {
 				this.program = program;
+				boolean temp_debug = false;
 				this.LOC = new ArrayList<String>();
+				String code = ".text\n.align 2\n.globl main\n";
 				String temp = "";
 				for (IRFunction func : this.program.functions) {
+						code = code + "\n\n" + func.name + ":\t";
+						if(func.parameters.size() > 4) {
+								for(int i = 3; i < func.parameters.size(); i++) {
+
+										code = code + "lw $" + func.parameters.get(i).getName() + " " + (12 + (i * 4)) + "($29)\n";
+
+								}
+						};
+						for(IRVariableOperand var : func.variables) {
+								if( !func.parameters.contains(var) & var.type instanceof IRArrayType) {
+										int size  = ((IRArrayType)var.type).getSize() * 4; 
+										code = code + "addi $29, $29, -" + size + "\n";
+										code = code + "move $"+ var.getName() + ", $29 # this is a local array\n";
+								}
+						}
+
+
 						for (IRInstruction ins : func.instructions) {
 								temp = translate_instruction(ins);
-								if (this.DEBUG) {
+								if (this.DEBUG && temp_debug) {
 										System.out.println(ins);
 										System.out.println(temp);
 										System.out.println();
 								}
+								code = code + temp;
 						}
 				}
+				if (this.DEBUG && temp_debug) System.out.println(code);
+				this.code = code + "\n\n"; //spim needs a blank line for some reason
 		}
 
 		public void test() {
-				System.out.println("test");
+				System.out.println(code);
 		}
 
 		public boolean is_var(IROperand operand) {
@@ -109,7 +132,11 @@ public class Translator {
 								mips_ins = aload(ins);
 								break;
 						case LABEL:
-								mips_ins = ins.operands[0] + ":\t";
+								if(ins.operands[0].toString().compareTo("return") == 0) {
+										mips_ins = ret(ins);
+								} else {
+										mips_ins = ins.operands[0] + ":\t";
+								}
 								break;
 						default:
 								break;
@@ -123,9 +150,9 @@ public class Translator {
 						mips = "error array assign";
 				} else {
 						if (is_var(tigerir.operands[1])) {
-								mips = "\tmove " + tigerir.operands[0] + ", " + tigerir.operands[1] + "\n";
+								mips = "\tmove $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + "\n";
 						} else {
-								mips = "\tli " + tigerir.operands[0] + ", " + tigerir.operands[1] + "\n";
+								mips = "\tli $" + tigerir.operands[0] + ", " + tigerir.operands[1] + "\n";
 								//mips = "\tlui " + tigerir.operands[0] + ", " + (Integer.parseInt(tigerir.operands[1].getValue()) >> 16) + "\n";
 						}
 				}
@@ -135,9 +162,9 @@ public class Translator {
 		public String add(IRInstruction tigerir) {
 				String mips = "";
 				if (is_var(tigerir.operands[1]) & is_var(tigerir.operands[2])) {
-						mips = mips+"\tadd " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+						mips = mips+"\tadd $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
 				} else if (is_var(tigerir.operands[1]) & !is_var(tigerir.operands[2])) {
-						mips = mips+"\taddi " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+						mips = mips+"\taddi $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
 				} else {
 						mips = mips + "wtf\n";
 				}
@@ -147,9 +174,9 @@ public class Translator {
 		public String sub(IRInstruction tigerir) {
 				String mips = "";
 				if (is_var(tigerir.operands[1]) & is_var(tigerir.operands[2])) {
-						mips = "\tsub " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+						mips = "\tsub $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
 				} else if (is_var(tigerir.operands[1]) & !is_var(tigerir.operands[2])) {
-						mips = "\tsubi " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+						mips = "\tsubi $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
 				} else {
 						mips = mips + "wtf\n";
 				}
@@ -161,11 +188,11 @@ public class Translator {
 				if (is_var(tigerir.operands[2])) { //unsigned?
 						mips = "\tmul " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
 				} else { //always signed
-						mips = mips + "\tli t1, " + tigerir.operands[2] + "\n";
+						mips = mips + "\tli $t1, " + tigerir.operands[2] + "\n";
 						if (true) { // if operand >>16 
 								//mips = mips + "\tlui t1, " + (Integer.parseInt(tigerir.operands[2].getValue()) >> 16) + "\n";
 						}
-						mips = "\tmul " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", t1\n";
+						mips = "\tmul $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $t1\n";
 				}
 				return mips;
 		}
@@ -173,21 +200,25 @@ public class Translator {
 		public String div(IRInstruction tigerir) {
 				String mips = "";
 				if (is_var(tigerir.operands[2])) { //unsigned?
-						mips = "\tdiv " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+						mips = "\tdiv $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
 				} else { //always signed
-						mips = mips + "\tli t1, " + tigerir.operands[2] + "\n";
+						mips = mips + "\tli $t1, " + tigerir.operands[2] + "\n";
 						if (true) {
 								//mips = mips + "\tlui t1, " + (Integer.parseInt(tigerir.operands[2].getValue()) >> 16) + "\n";
 						}
-						mips = "\tdiv " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", t1\n";
+						mips = "\tdiv $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $t1\n";
 				}
 				return mips;
 		}
 		public String and(IRInstruction tigerir) {
 				String mips = "";
 				if (is_var(tigerir.operands[1])) { //unsigned?
-						mips = "\tand " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
-				} /*else { //always signed
+						mips = "\tand $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
+				} else {
+						mips = "\tandi $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", "+tigerir.operands[2] + "\n";
+
+				}	
+				/*else { //always signed
 						mips = mips + "\tli t1, " + (Integer.parseInt(tigerir.operands[2].getValue()) % 65535) + "\n";
 						if (true) {
 								mips = mips + "\tlui t1, " + (Integer.parseInt(tigerir.operands[2].getValue()) >> 16) + "\n";
@@ -199,57 +230,59 @@ public class Translator {
 		public String or(IRInstruction tigerir) {
 				String mips = "";
 				if (is_var(tigerir.operands[1])) { //unsigned?
-						mips = "\tor " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+						mips = "\tor $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
 				} else { //always signed
 						//mips = mips + "\tli t1, " + (Integer.parseInt(tigerir.operands[2].getValue()) % 65535) + "\n";
 						//if (true) {
 						//		mips = mips + "\tlui t1, " + (Integer.parseInt(tigerir.operands[2].getValue()) >> 16) + "\n";
 						//}
-						mips = "\tori " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", "+tigerir.operands[2] + "\n";
+						mips = "\tori $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", "+tigerir.operands[2] + "\n";
 				}
 				return mips;
 		}
 		public String jump(IRInstruction tigerir) {
 				String mips = "";
-				mips = "\tjump " + tigerir.operands[0] + "\n";
+				mips = "\tjump $" + tigerir.operands[0] + "\n";
 				return mips;
 		}
 		public String breq(IRInstruction tigerir) {
 				String mips = "";
-				mips = "\tbeq " + tigerir.operands[1] + ", " + tigerir.operands[2] + ", "+ tigerir.operands[0] + "\n";
+				mips = "\tbeq $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + ", "+ tigerir.operands[0] + "\n";
 				return mips;
 		}
 		public String brneq(IRInstruction tigerir) {
 				String mips = "";
-				mips = "\tbne " + tigerir.operands[1] + ", " + tigerir.operands[2] + ", "+ tigerir.operands[0] + "\n";
+				mips = "\tbne $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + ", "+ tigerir.operands[0] + "\n";
 				return mips;
 		}
 		public String brlt(IRInstruction tigerir) {
 				String mips = "";
-				mips = "\tblt " + tigerir.operands[1] + ", " + tigerir.operands[2] + ", "+ tigerir.operands[0] + "\n";
+				mips = "\tblt $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + ", "+ tigerir.operands[0] + "\n";
 				return mips;
 		}
 		public String brgt(IRInstruction tigerir) {
 				String mips = "";
-				mips = "\tbgt " + tigerir.operands[1] + ", " + tigerir.operands[2] + ", "+ tigerir.operands[0] + "\n";
+				mips = "\tbgt $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + ", "+ tigerir.operands[0] + "\n";
 				return mips;
 		}
 		public String brleq(IRInstruction tigerir) {
 				String mips = "";
-				mips = mips + "\tsub t1, " + tigerir.operands[2] + ", " + tigerir.operands[1] + "\n";
-				mips = mips + "\tbgez t1,"+ tigerir.operands[0] + "\n";
+				mips = mips + "\tsub $t1, $" + tigerir.operands[2] + ", $" + tigerir.operands[1] + "\n";
+				mips = mips + "\tbgez $t1, $"+ tigerir.operands[0] + "\n";
 				return mips;
 		}
 		public String brgeq(IRInstruction tigerir) {
 				String mips = "";
-				mips = "\tbge "+ tigerir.operands[1] + ", " + tigerir.operands[2] + ", " + tigerir.operands[0] + "\n";
+				mips = "\tbge $"+ tigerir.operands[1] + ", $" + tigerir.operands[2] + ", " + tigerir.operands[0] + "\n";
 				return mips;
 		}
 		public String ret(IRInstruction tigerir) {
 				String mips = "";
 				//mips = mips + "sw " + tigerir.operands[0] + ", $30\n";
 				//mips = mips + "move $29, $30\n";
-				mips = mips + "move $v0, "+tigerir.operands[0] + "\n";
+				if(tigerir.operands.length > 1) {
+						mips = mips + "move $v0, "+tigerir.operands[1] + "\n";
+				}
 				mips = mips + "\tjr $31\n";
 				return mips;
 		}
@@ -260,12 +293,12 @@ public class Translator {
 				switch(tigerir.operands[0].toString()) 
 				{
 						case "puti": 
-								mips = mips + "\tli $a0, "+tigerir.operands[1]+ "\n";;
+								mips = mips + "\tli $a0, $"+tigerir.operands[1]+ "\n";;
 								mips = mips + "\tli $v0, 1\n";
 								mips = mips + "\tsyscall\n";
 								return mips;
 						case "putc":
-								mips = mips + "\tli $a0, "+tigerir.operands[1]+ "\n";;
+								mips = mips + "\tli $a0, $"+tigerir.operands[1]+ "\n";;
 								mips = mips + "\tli $v0, 11\n";
 								mips = mips + "\tsyscall\n";
 								return mips;
@@ -317,12 +350,12 @@ public class Translator {
 						case "geti": 
 								mips = mips + "\tli $v0, 5\n";
 								mips = mips + "\tsyscall\n";
-								mips = mips + "\tmove " + tigerir.operands[0]+ ", $v0\n";
+								mips = mips + "\tmove $" + tigerir.operands[0]+ ", $v0\n";
 								return mips;
 						case "getc":
 								mips = mips + "\tli $v0, 12\n";
 								mips = mips + "\tsyscall\n";
-								mips = mips + "\tmove "+ tigerir.operands[0]+ ", $v0\n";;
+								mips = mips + "\tmove $"+ tigerir.operands[0]+ ", $v0\n";;
 								return mips;
 						default:
 									//calculate and alloc size
@@ -355,7 +388,7 @@ public class Translator {
 								mips = mips + "\tjal " + tigerir.operands[1] + "\n";
 								
 								//get return value
-								mips = mips + "\tmove "+ tigerir.operands[0]+ ", $v0\n";
+								mips = mips + "\tmove $"+ tigerir.operands[0]+ ", $v0\n";
 
 								//return from func
 								mips = mips + load_ra(ra_offset);
@@ -369,18 +402,18 @@ public class Translator {
 		public String astore(IRInstruction tigerir) {
 				String mips = "";
 				if(is_var(tigerir.operands[1]) & is_var(tigerir.operands[2])) {
-						mips = mips + "\tadd t1, " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
-						mips = mips + "\tsw " + tigerir.operands[0] + ", 0(t1)\n";
+						mips = mips + "\tadd $temp, " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+						mips = mips + "\tsw $" + tigerir.operands[0] + ", 0($temp)\n";
 				} else if (is_var(tigerir.operands[1]) & !is_var(tigerir.operands[2])) {
-						mips = mips + "\tsw " + tigerir.operands[0] + ", " + tigerir.operands[2] + "("+ tigerir.operands[1] + ")\n";
+						mips = mips + "\tsw $" + tigerir.operands[0] + ", " + tigerir.operands[2] + "($"+ tigerir.operands[1] + ")\n";
 				}
 				return mips;
 		}
 		public String aload(IRInstruction tigerir) {
 				String mips = "";
 				if(is_var(tigerir.operands[1]) & is_var(tigerir.operands[2])) {
-						mips = mips + "\tadd t1, " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
-						mips = mips + "\tlw " + tigerir.operands[0] + ", 0(t1)\n";
+						mips = mips + "\tadd $temp, $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
+						mips = mips + "\tlw $" + tigerir.operands[0] + ", 0($temp)\n";
 				} else if (is_var(tigerir.operands[1]) & !is_var(tigerir.operands[2])) {
 						mips = mips + "\tlw " + tigerir.operands[0] + ", "+ tigerir.operands[2] +"("+ tigerir.operands[1]+")\n";
 				}
@@ -484,19 +517,19 @@ public class Translator {
 				for(int i = x; i < ins.operands.length; i++) {
 						if(i < 5) {
 								if (is_var(ins.operands[i])) {
-										mips = mips + "\tsw "+ins.operands[i] +", "+ (i*4) + "($29)\n";
+										mips = mips + "\tsw $"+ins.operands[i] +", "+ (i*4) + "($29)\n";
 								} else {
-										mips = mips + "\tli t1, "+ins.operands[i]+"\n";//add lui
-										mips = mips + "\tsw t1, "+ (i*4) + "($29)\n";
+										mips = mips + "\tli $temp, "+ins.operands[i]+"\n";//add lui
+										mips = mips + "\tsw $temp, "+ (i*4) + "($29)\n";
 								}
 						} else {
 								if (is_var(ins.operands[i])) {
-										mips = mips + "\tsw "+ins.operands[i] +", "+ (i*4) + "($29)\n";
-										mips = mips + "\tmove $a" + i+ ", " + ins.operands[i] + "\n";
+										mips = mips + "\tsw $"+ins.operands[i] +", "+ (i*4) + "($29)\n";
+										mips = mips + "\tmove $a" + i+ ", $" + ins.operands[i] + "\n";
 								} else {
-										mips = mips + "\tli t1, "+ins.operands[i]+"\n";//add lui
-										mips = mips + "\tsw t1, "+ (i*4) + "($29)\n";
-										mips = mips + "\tmove $a" + i+ ", " + ins.operands[i] + "\n";
+										mips = mips + "\tli $t1, $"+ins.operands[i]+"\n";//add lui
+										mips = mips + "\tsw $t1, "+ (i*4) + "($29)\n";
+										mips = mips + "\tmove $a" + i+ ", $" + ins.operands[i] + "\n";
 								}
 						}
 				}
