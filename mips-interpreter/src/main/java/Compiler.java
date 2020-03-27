@@ -101,11 +101,11 @@ public class Compiler {
 				test.test();
 				
 				RegisterGraph graph = new RegisterGraph();
-				graph.color(2);
+				graph.color(1);
 				System.out.println("Graph: "+graph);
 				
 				System.out.println("Assembly:\n"+graph.hardCodedAssembly());
-				System.out.println("New assembly:\n"+graph.replaceRegisters(graph.hardCodedAssembly()));
+				System.out.println("New assembly:\n"+graph.replaceRegisters(graph.hardCodedAssembly(),graph.hardCodedFreeRegisters()));
     };
 
     public static void displayCFG(IRCFG cfg) {

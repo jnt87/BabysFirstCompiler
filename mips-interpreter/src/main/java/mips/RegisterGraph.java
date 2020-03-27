@@ -34,6 +34,15 @@ public class RegisterGraph {
 		return assembly;
 	}
 	
+	public ArrayList<String> hardCodedFreeRegisters(){
+		ArrayList<String> output = new ArrayList<>();
+		output.add("t0");
+		output.add("t1");
+		output.add("t2");
+		output.add("t3");
+		return output;
+	}
+	
 	public void addNewNode(RegisterNode newNode) {
 		this.nodes.add(newNode);
 	}
@@ -47,7 +56,7 @@ public class RegisterGraph {
 		Stack<RegisterNode> stack = new Stack<>();
 		for (RegisterNode node:this.nodes) {
 			if(node.visited==false) {
-				if(node.getDegree()>k) return false;
+				//if(node.getDegree()>k) return false;
 				stack.push(node);
 				node.visited = true;
 			}
@@ -63,12 +72,12 @@ public class RegisterGraph {
 	}
 	
 	//Replace registers
-	public String replaceRegisters(String assembly) {
+	public String replaceRegisters(String assembly, ArrayList<String> freeRegisters) {
 		String newAssembly = new String();
 		for (int ii = 0; ii<assembly.length(); ii++) {
 			if(assembly.charAt(ii)=='$') {
 				String registerName = getRegisterName(assembly,ii);
-				String newRegisterName = replaceName(registerName);
+				String newRegisterName = replaceName(registerName,freeRegisters);
 				if (newRegisterName!=null) {
 					newAssembly = newAssembly + newRegisterName;
 					ii = ii + registerName.length();
@@ -99,10 +108,14 @@ public class RegisterGraph {
 	}
 	
 	//Return the new name for the register
-	public String replaceName(String registerToReplace) {
+	public String replaceName(String registerToReplace, ArrayList<String> freeRegisters) {
 		for(RegisterNode node:this.nodes) {
 			if (node.register.equals("$"+registerToReplace)) {
-				return "$t"+node.color;
+				if (node.color!=-1) {
+					return "$"+freeRegisters.get(node.color);
+				}else {
+					return "Spill";
+				}
 			}
 		}
 		
