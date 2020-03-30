@@ -147,7 +147,7 @@ public class Translator {
 		public String assign(IRInstruction tigerir) {
 				String mips = "";
 				if (tigerir.operands.length > 2) { //array assign
-						mips = "error array assign";
+						mips = mips + array_assign(tigerir);;
 				} else {
 						if (is_var(tigerir.operands[1])) {
 								mips = "\tmove $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + "\n";
@@ -155,6 +155,15 @@ public class Translator {
 								mips = "\tli $" + tigerir.operands[0] + ", " + tigerir.operands[1] + "\n";
 								//mips = "\tlui " + tigerir.operands[0] + ", " + (Integer.parseInt(tigerir.operands[1].getValue()) >> 16) + "\n";
 						}
+				}
+				return mips;
+		}
+		
+		public String array_assign(IRInstruction tigerir) {
+				String mips = "";
+				mips = mips + "li $temp, " + tigerir.operands[3] + "\n";
+				for (int i = 0; i < Integer.parseInt(tigerir.operands[1].getValue()); i++) {
+						mips = mips + "sw $temp, "+ (i * 4) + "($" + tigerir.operands[0] + ")\n";
 				}
 				return mips;
 		}
