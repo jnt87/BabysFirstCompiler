@@ -97,16 +97,30 @@ public class Compiler {
             filePrinter.printProgram(program);
         }
 
-				Translator test = new Translator(program);
-				test.test();
-				
-				RegisterGraph graph = new RegisterGraph();
-				graph.color(1);
-				System.out.println("Graph: "+graph);
-				
-				System.out.println("Assembly:\n"+graph.hardCodedAssembly());
-				System.out.println("New assembly:\n"+graph.replaceRegisters(graph.hardCodedAssembly(),graph.hardCodedFreeRegisters()));
-    };
+
+        Translator test = new Translator(program);
+        //test.test();
+
+        System.out.println("-------NICK TESTING------");
+        Scanner sc = new Scanner(test.code);
+        sc.nextLine();
+        sc.nextLine();
+        sc.nextLine();
+        sc.nextLine();
+        sc.nextLine();
+        for (int j = 1; sc.hasNextLine(); j++) {
+            System.out.printf("%d. %s\n", j, sc.nextLine());
+        }
+        System.out.println("\nEND MIPS VERSION\n");
+        LiveRange.live_range(test.code);
+        
+        RegisterGraph graph = new RegisterGraph();
+        graph.color(1);
+        System.out.println("Graph: "+graph);
+        
+        System.out.println("Assembly:\n"+graph.hardCodedAssembly());
+        System.out.println("New assembly:\n"+graph.replaceRegisters(graph.hardCodedAssembly(),graph.hardCodedFreeRegisters()));
+    }
 
     public static void displayCFG(IRCFG cfg) {
         System.out.println(cfg.blocks.size());
