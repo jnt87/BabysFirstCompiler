@@ -1,10 +1,10 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.Arrays;
-// import ir.*;
 
 public class LiveRange {
     private class Vector {
@@ -21,9 +21,43 @@ public class LiveRange {
 
     private static boolean DEBUG = false;
 
-    
+    public static HashMap<String, List<MIPSNode>> generateDependencies(String program) {
+        HashMap<String, HashMap<String, Vector>> functionLiveRanges = live_range(program);  // contains live ranges of every function
+        HashMap<String, List<MIPSNode>> functionMipsNode = new HashMap<>(); // final return that contaians every MIPSNode separated by function
 
-    public static void live_range(String program) {
+        for (String function : functionLiveRanges.keySet()) {
+            HashMap<String, Vector> indiv_live_ranges = functionLiveRanges.get(function);   // contains live ranges for a specific function
+            // functionMipsNode.put(function, new ArrayList<MIPSNode>());
+            HashMap<String, MIPSNode> tempAllNodes = new HashMap<>();   // temporary set that contains all MIPSNode for current function
+            for (String register : indiv_live_ranges.keySet()) {
+                // creates a node for every register
+                tempAllNodes.put(register, new MIPSNode(register));
+            }
+
+            for (String register : tempAllNodes.keySet()) {
+                for (String otherRegister : tempAllNodes.keySet()) {
+                    if (otherRegister.equals(register)) {
+                        continue;
+                    }
+                    Vector current = indiv_live_ranges.get(register);
+                    Vector other = indiv_live_ranges.get(otherRegister);
+
+                    // check if the two ranges overlap
+                    if ((current.liveStart >= other.liveStart && current.liveStart <= other.liveEnd) || (current.liveEnd >= other.liveStart && current.liveEnd <= other.liveEnd)) {
+                        MIPSNode currNode = tempAllNodes.get(register);
+                        MIPSNode otherNode = tempAllNodes.get(otherRegister);
+                        currNode.dependencies.add(otherNode);
+                        otherNode.dependencies.add(currNode);
+                    }
+                }
+            }
+            functionMipsNode.put(function, new ArrayList<MIPSNode>(tempAllNodes.values()));
+        }
+
+        return functionMipsNode;
+    }
+
+    public static HashMap<String, HashMap<String, Vector>> live_range(String program) {
         // decompress the input to it's respective function calls
         HashMap<String, ArrayList<String>> functions = new HashMap<>();
         Scanner sc = new Scanner(program);
@@ -66,6 +100,8 @@ public class LiveRange {
                 System.out.printf("Register %s has a live range from %d to %d\n", register, vec.liveStart, vec.liveEnd);
             }
         }
+
+        return functionLiveRanges;
     }
 
     public static HashMap<String, Vector> calculate_live(String[] program) {
@@ -83,9 +119,10 @@ public class LiveRange {
             if (!liveRanges.containsKey(register)) {
                 liveRanges.put(register, new LiveRange().new Vector(i, i));
                 for (int j = i + 1; j < program.length; j++) {
-                    if (new StringTokenizer(program[i], " |, ").countTokens() < 3) {
+                    if (new StringTokenizer(program[j], " |, ").countTokens() < 3) {
                         continue;
                     }
+                    
                     String temp_register = retrieveRegister(program[j]);
                     String[] operands = retrieveOperands(program[j]);
 
