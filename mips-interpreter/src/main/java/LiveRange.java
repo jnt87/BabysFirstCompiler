@@ -1,7 +1,6 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.Arrays;
@@ -17,7 +16,7 @@ public class LiveRange {
         }
     }
 
-    private static String[] registersToIgnore = {"$29"};
+    private static String[] parameterRegisters = {"a0", "a1", "a2", "a3"};
 
     private static boolean DEBUG = false;
 
@@ -112,9 +111,10 @@ public class LiveRange {
                 continue;
             }
             String register = retrieveRegister(program[i]);
-            if (Arrays.asList(registersToIgnore).contains(register)) {
+            if (!isCheckedRegister(register)) {
                 continue;   // ignores registers that matches this criteria
                             // replace conditional with a custom function if ignoring more than just certain registers
+                            // TODO: CHECK REGISTERS TO IGNORE
             }
             if (!liveRanges.containsKey(register)) {
                 liveRanges.put(register, new LiveRange().new Vector(i, i));
@@ -122,7 +122,7 @@ public class LiveRange {
                     if (new StringTokenizer(program[j], " |, ").countTokens() < 3) {
                         continue;
                     }
-                    
+
                     String temp_register = retrieveRegister(program[j]);
                     String[] operands = retrieveOperands(program[j]);
 
@@ -179,5 +179,25 @@ public class LiveRange {
         System.arraycopy(list.toArray(), 0, strArray, 0, strArray.length);
         //System.out.println("ARRAY CONVERTED IS " + Arrays.asList(strArray));
         return strArray;
+    }
+
+    private static boolean isCheckedRegister(String register) {
+        String temp = register.replaceAll("\\$", "").trim();
+        if (Arrays.asList(parameterRegisters).contains(temp)) {
+            // System.out.printf("Register is %s and the verdict is true\n", temp);
+            return true;
+        }
+        try {
+            int reg_num = Integer.parseInt(temp);
+            if (reg_num >= 0 && reg_num <= 31) {
+                // System.out.printf("Register is %s and the verdict is true\n", temp);
+                return true;
+            }
+        } catch (Exception e) {
+            // System.out.printf("Register is %s and the verdict is false\n", temp);
+            return false;
+        }
+        // System.out.printf("Register is %s and the verdict is false\n", temp);
+        return false;
     }
 }
