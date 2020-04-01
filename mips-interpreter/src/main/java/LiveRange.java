@@ -7,6 +7,9 @@ import java.util.Arrays;
 import mips.RegisterNode;
 
 public class LiveRange {
+
+    private static HashMap<String, String> functionMipsCode;
+
     private class Vector {
         public int liveStart;
         public int liveEnd;
@@ -22,6 +25,7 @@ public class LiveRange {
     private static boolean DEBUG = false;
 
     public static HashMap<String, List<RegisterNode>> generateDependencies(String program) {
+        functionMipsCode = new HashMap<>();
         HashMap<String, HashMap<String, Vector>> functionLiveRanges = live_range(program);  // contains live ranges of every function
         HashMap<String, List<RegisterNode>> functionRegisterNode = new HashMap<>(); // final return that contaians every RegisterNode separated by function
 
@@ -93,6 +97,7 @@ public class LiveRange {
 
         HashMap<String, HashMap<String, Vector>> functionLiveRanges = new HashMap<>();  // should contain the live ranges for every function
         for (String function : functions.keySet()) {
+            functionMipsCode.put(function, concatenateProgram(functions.get(function)));
             functionLiveRanges.put(function, calculate_live(listToStringArray(functions.get(function))));
         }
 
@@ -110,6 +115,7 @@ public class LiveRange {
 
     public static HashMap<String, Vector> calculate_live(String[] program) {
         HashMap<String, Vector> liveRanges = new HashMap<String, Vector>();
+
 
         for (int i = 0; i < program.length; i++) {
             if (new StringTokenizer(program[i], " |, ").countTokens() < 3) {
@@ -204,5 +210,15 @@ public class LiveRange {
         }
         // System.out.printf("Register is %s and the verdict is false\n", temp);
         return false;
+    }
+
+    private static String concatenateProgram(List<String> program) {
+        String returnVal = "";
+        
+        for (String line : program) {
+            returnVal += line + "\n";
+        }
+
+        return returnVal;
     }
 }
