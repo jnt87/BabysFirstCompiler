@@ -8,7 +8,7 @@ import mips.RegisterNode;
 
 public class LiveRange {
 
-    private static HashMap<String, String> functionMipsCode;
+    public static HashMap<String, String> functionMipsCode;
 
     private class Vector {
         public int liveStart;
