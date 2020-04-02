@@ -3,7 +3,6 @@ import ir.*;
 import java.io.PrintStream;
 import java.util.*;
 import mips.*;
-import mips.Translator;
 
 public class Compiler {
     public static void main(String[] args) throws Exception {
@@ -112,15 +111,26 @@ public class Compiler {
             System.out.printf("%d. %s\n", j, sc.nextLine());
         }
         System.out.println("\nEND MIPS VERSION\n");
-        LiveRange.live_range(test.code);
+        HashMap<String, List<RegisterNode>> dependencies = LiveRange.generateDependencies(test.code);
         
-        RegisterGraph graph = new RegisterGraph();
-        graph.color(1);
+        Iterator iterator = dependencies.entrySet().iterator();
+        
+        System.out.println("New assembly:");
+        while (iterator.hasNext()) {
+        	Map.Entry elem = (Map.Entry)iterator.next();
+        	RegisterGraph graph = new RegisterGraph((ArrayList)(elem).getValue());
+        	graph.color(graph.nodes.get(0).getDegree()+1);
+        	System.out.println("-------New function--------");
+        	System.out.println("\n"+graph.replaceRegisters(LiveRange.functionMipsCode.get((elem).getKey()),graph.hardCodedFreeRegisters()));
+        }
+        
+        /*RegisterGraph graph = new RegisterGraph();
+        graph.color(2);
         System.out.println("Graph: "+graph);
         
         System.out.println("Assembly:\n"+graph.hardCodedAssembly());
         System.out.println("New assembly:\n"+graph.replaceRegisters(graph.hardCodedAssembly(),graph.hardCodedFreeRegisters()));
-    }
+    */}
 
     public static void displayCFG(IRCFG cfg) {
         System.out.println(cfg.blocks.size());
