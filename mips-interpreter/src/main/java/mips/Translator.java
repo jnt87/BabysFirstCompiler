@@ -24,7 +24,7 @@ public class Translator {
 				String code = ".text\n.align 2\n.globl main\n";
 				String temp = "";
 				for (IRFunction func : this.program.functions) {
-						code = code + "\n\n" + func.name + ":\t";
+						code = code + "\n\n" + func.name + "():\t";
 						if(func.parameters.size() > 4) {
 								for(int i = 3; i < func.parameters.size(); i++) {
 

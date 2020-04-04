@@ -16,7 +16,7 @@ public class RegisterGraph {
 		RegisterNode node3 = new RegisterNode("$temp2");
 		
 		node1.addEdge(node2);
-		node1.addEdge(node3);
+		//node1.addEdge(node3);
 		
 		this.nodes = new ArrayList<>(Arrays.asList(node1,node2,node3));
 		Collections.sort(this.nodes);
