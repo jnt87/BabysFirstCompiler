@@ -15,6 +15,7 @@ public class Translator {
 		public IRProgram program;
 		public List<String> LOC;
 		public String code;
+		//public param_map... 
 
 		public Translator(IRProgram program) {
 				this.program = program;
@@ -41,7 +42,7 @@ public class Translator {
 
 
 						for (IRInstruction ins : func.instructions) {
-								temp = translate_instruction(ins);
+								temp = translate_instruction(ins, func);
 								if (this.DEBUG && temp_debug) {
 										System.out.println(ins);
 										System.out.println(temp);
@@ -52,6 +53,10 @@ public class Translator {
 				}
 				if (this.DEBUG && temp_debug) System.out.println(code);
 				this.code = code + "\n\n"; //spim needs a blank line for some reason
+		}
+		
+		public void create_param_table(IRFunction func) {
+				return;
 		}
 
 		public void test() {
@@ -70,7 +75,7 @@ public class Translator {
 				return false;
 		}
 
-		public String translate_instruction(IRInstruction ins) {
+		public String translate_instruction(IRInstruction ins, IRFunction current_func) {
 				String mips_ins = "wip";
 				switch ( ins.opCode ) {
 						//case ASSIGN:
@@ -120,10 +125,10 @@ public class Translator {
 								mips_ins = ret(ins);
 								break;
 						case CALL:
-								mips_ins = call(ins);
+								mips_ins = call(ins, current_func);
 								break;
 						case CALLR:
-								mips_ins = callr(ins);
+								mips_ins = callr(ins, current_func);
 								break;
 						case ARRAY_STORE:
 								mips_ins = astore(ins);
@@ -296,19 +301,27 @@ public class Translator {
 				return mips;
 		}
 
-		public String call(IRInstruction tigerir) {
+		public String call(IRInstruction tigerir, IRFunction current_func) {
 				String mips = "";
 				boolean has_rv = false;
 				switch(tigerir.operands[0].toString()) 
 				{
 						case "puti": 
+								mips = mips + "\taddi $29, $29, -4\n";
+								mips = mips + "\tsw $a0, 0($29)\n";
 								mips = mips + "\tli $a0, $"+tigerir.operands[1]+ "\n";;
 								mips = mips + "\tli $v0, 1\n";
+								mips = mips + "\tlw $a0, 0($29)\n";
+								mips = mips + "\taddi $29, $29, 4\n";
 								mips = mips + "\tsyscall\n";
 								return mips;
 						case "putc":
+								mips = mips + "\taddi $29, $29, -4\n";
+								mips = mips + "\tsw $a0, 0($29)\n";
 								mips = mips + "\tli $a0, $"+tigerir.operands[1]+ "\n";;
 								mips = mips + "\tli $v0, 11\n";
+								mips = mips + "\tlw $a0, 0($29)\n";
+								mips = mips + "\taddi $29, $29, 4\n";
 								mips = mips + "\tsyscall\n";
 								return mips;
 						default:
@@ -316,7 +329,7 @@ public class Translator {
 								int max_temps = 10;
 								int space = max_temps * 4;
 								int aligned_space = space + (space % 8);
-								int size_arg_saved_ra = par_size_total(tigerir, has_rv) + saved_size(9) + ra_size();
+								int size_arg_saved_ra = par_size_total(tigerir, has_rv) + saved_size(9) + ra_size() + size_of_args(current_func);
 								int size_arg_saved_ra_needed = size_arg_saved_ra + (size_arg_saved_ra % 8); //pad added at the top 
 								int size_needed = size_arg_saved_ra_needed + aligned_space;
 			
@@ -326,6 +339,7 @@ public class Translator {
 								//bookkeeping offset calculations
 								//args/params have no offset
 								int saved_offset = par_size_total(tigerir, has_rv);
+								int args_offset = saved_offset + size_of_args(current_func);
 								int ra_offset = saved_offset + saved_size(9); //same as above, could be 8 if we use fp
 								int temp_offset = size_arg_saved_ra_needed; //padding 
 			
@@ -333,6 +347,7 @@ public class Translator {
 								mips = mips + store_temps(max_temps, temp_offset); //goes to local storage for function
 			
 								//bookkeeping
+								mips = mips + store_args0123(current_func, args_offset);
 								mips = mips + store_saved(9, saved_offset);
 								mips = mips + store_ra(ra_offset);
 			
@@ -345,13 +360,15 @@ public class Translator {
 								mips = mips + load_ra(ra_offset);
 								//load temps
 								mips = mips + load_temps(max_temps, temp_offset);
+								mips = mips + load_saved(9, saved_offset);
+								mips = mips + load_args0123(current_func, args_offset);
 						
 								mips = mips + "\taddi $29, $29, "+size_needed+"\n";
 								return mips;
 					}
 		}
 
-		public String callr(IRInstruction tigerir) {
+		public String callr(IRInstruction tigerir, IRFunction current_func) {
 				String mips = "";
 				boolean has_rv = true;
 				switch(tigerir.operands[1].toString()) 
@@ -364,14 +381,14 @@ public class Translator {
 						case "getc":
 								mips = mips + "\tli $v0, 12\n";
 								mips = mips + "\tsyscall\n";
-								mips = mips + "\tmove $"+ tigerir.operands[0]+ ", $v0\n";;
+								mips = mips + "\tmove $"+ tigerir.operands[0]+ ", $v0\n";
 								return mips;
 						default:
 									//calculate and alloc size
 								int max_temps = 10;
 								int space = max_temps * 4;
 								int aligned_space = space + (space % 8);
-								int size_arg_saved_ra = par_size_total(tigerir, has_rv) + saved_size(9) + ra_size();
+								int size_arg_saved_ra = par_size_total(tigerir, has_rv) + saved_size(9) + ra_size() + size_of_args(current_func);;
 								int size_arg_saved_ra_needed = size_arg_saved_ra + (size_arg_saved_ra % 8); //pad added at the top 
 								int size_needed = size_arg_saved_ra_needed + aligned_space;
 			
@@ -381,6 +398,7 @@ public class Translator {
 								//bookkeeping offset calculations
 								//args/params have no offset
 								int saved_offset = par_size_total(tigerir, has_rv);
+								int args_offset = saved_offset + size_of_args(current_func);
 								int ra_offset = saved_offset + saved_size(9); //same as above, could be 8 if we use fp
 								int temp_offset = size_arg_saved_ra_needed; //padding 
 			
@@ -390,6 +408,7 @@ public class Translator {
 								//bookkeeping
 								mips = mips + store_saved(9, saved_offset);
 								mips = mips + store_ra(ra_offset);
+								mips = mips + store_args0123(current_func, args_offset);
 			
 								//params
 								mips = mips + store_params(tigerir, has_rv);
@@ -403,6 +422,7 @@ public class Translator {
 								mips = mips + load_ra(ra_offset);
 								//load temps
 								mips = mips + load_temps(max_temps, temp_offset);
+								mips = mips + load_args0123(current_func, args_offset);
 						
 								mips = mips + "\taddi $29, $29, "+size_needed+"\n";
 								return mips;
@@ -437,6 +457,11 @@ public class Translator {
 						size = size + 4;
 				}
 				if(has_rv) { size = size - 4; }
+				if(size < 20) {
+						size = 0;
+				} else {
+						size = size - 20; //first 4 args passed via registers
+				}
 				return size;
 		}
 
@@ -521,28 +546,43 @@ public class Translator {
 		public String store_params(IRInstruction ins, boolean has_rv) {
 				//sp_offset will always be zero during this phase 
 				String mips = "";
-				int x  = 1;
+				int x  = 0;
 				if(has_rv) x++;
 				for(int i = x; i < ins.operands.length; i++) {
-						if(i < 5) {
+						if(i > 3) {
 								if (is_var(ins.operands[i])) {
-										mips = mips + "\tsw $"+ins.operands[i] +", "+ (i*4) + "($29)\n";
+										mips = mips + "\tsw $"+ins.operands[i] +", "+ ((i*4)-20) + "($29)\n";
 								} else {
 										mips = mips + "\tli $temp, "+ins.operands[i]+"\n";//add lui
-										mips = mips + "\tsw $temp, "+ (i*4) + "($29)\n";
+										mips = mips + "\tsw $temp, "+ ((i*4)-20) + "($29)\n";
 								}
 						} else {
 								if (is_var(ins.operands[i])) {
-										mips = mips + "\tsw $"+ins.operands[i] +", "+ (i*4) + "($29)\n";
 										mips = mips + "\tmove $a" + i+ ", $" + ins.operands[i] + "\n";
 								} else {
-										mips = mips + "\tli $t1, $"+ins.operands[i]+"\n";//add lui
-										mips = mips + "\tsw $t1, "+ (i*4) + "($29)\n";
-										mips = mips + "\tmove $a" + i+ ", $" + ins.operands[i] + "\n";
+										mips = mips + "\tli $a"+i+", $"+ins.operands[i]+"\n";//add lui
 								}
 						}
 				}
 				return mips;
 		}
 
+		public int size_of_args(IRFunction current_func) {
+				return current_func.parameters.size() * 4;
+		}
+
+		public String store_args0123(IRFunction current_func, int offset) {
+				String mips = "";
+				for(int i = 0; i < current_func.parameters.size(); i++) {
+						mips = mips + "sw $a" + i + " "+offset+"($29)\n";
+				}
+				return mips;
+		}
+		public String load_args0123(IRFunction current_func, int offset) {
+				String mips = "";
+				for(int i = 0; i < current_func.parameters.size(); i++) {
+						mips = mips + "lw $a" + i + " "+offset+"($29)\n";
+				}
+				return mips;
+		}
 }
