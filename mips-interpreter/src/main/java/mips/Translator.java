@@ -461,7 +461,7 @@ public class Translator {
 		public String astore(IRInstruction tigerir) {
 				String mips = "";
 				if(is_var(tigerir.operands[1]) & is_var(tigerir.operands[2])) {
-						mips = mips + "\tadd $temp, " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
+						mips = mips + "\tadd $temp, $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
 						mips = mips + "\tsw $" + tigerir.operands[0] + ", 0($temp)\n";
 				} else if (is_var(tigerir.operands[1]) & !is_var(tigerir.operands[2])) {
 						mips = mips + "\tsw $" + tigerir.operands[0] + ", " + tigerir.operands[2] + "($"+ tigerir.operands[1] + ")\n";
