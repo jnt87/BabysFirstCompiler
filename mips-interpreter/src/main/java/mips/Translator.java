@@ -149,16 +149,24 @@ public class Translator {
 				return mips_ins;
 		}
 
+		public void reorder(IRInstruction tigerir, int x, int y) {
+				String mips = "";
+				if(!is_var(tigerir.operands[x])) {
+						IROperand temp = tigerir.operands[y];
+						tigerir.operands[y] = tigerir.operands[x];
+						tigerir.operands[x] = temp;
+				}
+		}
+
 		public String assign(IRInstruction tigerir) {
 				String mips = "";
 				if (tigerir.operands.length > 2) { //array assign
-						mips = mips + array_assign(tigerir);;
+						mips = mips + array_assign(tigerir);
 				} else {
 						if (is_var(tigerir.operands[1])) {
 								mips = "\tmove $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + "\n";
 						} else {
 								mips = "\tli $" + tigerir.operands[0] + ", " + tigerir.operands[1] + "\n";
-								//mips = "\tlui " + tigerir.operands[0] + ", " + (Integer.parseInt(tigerir.operands[1].getValue()) >> 16) + "\n";
 						}
 				}
 				return mips;
@@ -175,6 +183,7 @@ public class Translator {
 
 		public String add(IRInstruction tigerir) {
 				String mips = "";
+				reorder(tigerir, 1, 2);
 				if (is_var(tigerir.operands[1]) & is_var(tigerir.operands[2])) {
 						mips = mips+"\tadd $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
 				} else if (is_var(tigerir.operands[1]) & !is_var(tigerir.operands[2])) {
@@ -199,6 +208,7 @@ public class Translator {
 
 		public String mult(IRInstruction tigerir) {
 				String mips = "";
+				reorder(tigerir, 1, 2);
 				if (is_var(tigerir.operands[2])) { //unsigned?
 						mips = "\tmul " + tigerir.operands[0] + ", " + tigerir.operands[1] + ", " + tigerir.operands[2] + "\n";
 				} else { //always signed
@@ -226,6 +236,7 @@ public class Translator {
 		}
 		public String and(IRInstruction tigerir) {
 				String mips = "";
+				reorder(tigerir, 1, 2);
 				if (is_var(tigerir.operands[1])) { //unsigned?
 						mips = "\tand $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
 				} else {
@@ -243,6 +254,7 @@ public class Translator {
 		}
 		public String or(IRInstruction tigerir) {
 				String mips = "";
+				reorder(tigerir, 1, 2);
 				if (is_var(tigerir.operands[1])) { //unsigned?
 						mips = "\tor $" + tigerir.operands[0] + ", $" + tigerir.operands[1] + ", $" + tigerir.operands[2] + "\n";
 				} else { //always signed
@@ -568,20 +580,23 @@ public class Translator {
 		}
 
 		public int size_of_args(IRFunction current_func) {
-				return current_func.parameters.size() * 4;
+				//could optimize
+				return 20;
 		}
 
 		public String store_args0123(IRFunction current_func, int offset) {
 				String mips = "";
-				for(int i = 0; i < current_func.parameters.size(); i++) {
-						mips = mips + "sw $a" + i + " "+offset+"($29)\n";
+				//could optimize
+				for(int i = 0; i < 3; i++) {
+						mips = mips + "\tsw $a" + i + " "+offset+"($29)\n";
 				}
 				return mips;
 		}
 		public String load_args0123(IRFunction current_func, int offset) {
 				String mips = "";
-				for(int i = 0; i < current_func.parameters.size(); i++) {
-						mips = mips + "lw $a" + i + " "+offset+"($29)\n";
+				//could optimize
+				for(int i = 0; i < 3; i++) {
+						mips = mips + "\tlw $a" + i + " "+offset+"($29)\n";
 				}
 				return mips;
 		}
