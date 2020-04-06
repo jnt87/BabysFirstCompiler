@@ -119,7 +119,7 @@ public class Compiler {
         while (iterator.hasNext()) {
         	Map.Entry elem = (Map.Entry)iterator.next();
         	RegisterGraph graph = new RegisterGraph((ArrayList)(elem).getValue());
-        	graph.color(graph.nodes.get(0).getDegree()+1);
+        	graph.color(graph.hardCodedFreeRegisters().size());
         	System.out.println("-------New function--------");
         	System.out.println("\n"+graph.replaceRegisters(LiveRange.functionMipsCode.get((elem).getKey()),graph.hardCodedFreeRegisters()));
         }

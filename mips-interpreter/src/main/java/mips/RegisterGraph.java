@@ -112,6 +112,8 @@ public class RegisterGraph {
 		for(RegisterNode node:this.nodes) {
 			if (node.register.equals("$"+registerToReplace)) {
 				if (node.color!=-1) {
+					System.out.println("node: "+node);
+					System.out.println("Free registers: "+freeRegisters);
 					return "$"+freeRegisters.get(node.color);
 				}else {
 					return "Spill";
