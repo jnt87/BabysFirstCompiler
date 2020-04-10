@@ -298,12 +298,10 @@ public class DeadCode {
 
             // Generate the IN and OUT set for each node
             boolean change = false;
-            int i = 0;
             do {
                 visited = new HashSet<>();
                 change = recurseInOutHelper(curr, visited);
-                i++;
-            } while (change || i < 10);
+            } while (change);
         }
     }
 
@@ -338,7 +336,7 @@ public class DeadCode {
         for (IRNode child : curr.edgeList) {
             if (!visited.contains(child)) {
                 visited.add(child);
-                change = recurseInOutHelper(child, visited);
+                change = change || recurseInOutHelper(child, visited);
             }
         }
         return change;
