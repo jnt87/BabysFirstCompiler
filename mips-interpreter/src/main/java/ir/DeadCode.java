@@ -298,10 +298,12 @@ public class DeadCode {
 
             // Generate the IN and OUT set for each node
             boolean change = false;
+            int i = 0;
             do {
                 visited = new HashSet<>();
                 change = recurseInOutHelper(curr, visited);
-            } while (change);
+                i++;
+            } while (change || i < 10);
         }
     }
 
