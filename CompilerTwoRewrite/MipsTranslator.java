@@ -1,4 +1,5 @@
 import ir.*;
+import main.java.mips.operand.Register;
 
 import java.io.PrintStream;
 import java.io.*;
@@ -24,6 +25,21 @@ public class MipsTranslator {
         IRProgram program = irReader.parseIRFile(Optimized_IRFile);
 
         HashMap<IRFunction, List<String>> mipsVersion = InstructionSelection.handleInstruction(program);
+
+        String code = "";
+        for (IRFunction func : mipsVersion.keySet()) {
+            List<String> instruct = mipsVersion.get(func);
+
+            for (String line : instruct) {
+                if (line.trim().equals("")) {
+                    continue;
+                }
+                code += line;
+            }
+        }
+
+        System.out.println("The completed code is " + code);
+        // RegisterAllocator.spillAlgorithm(mipsVersion, new ArrayList<>(), new HashMap<>());
         RegisterAllocator.test_allocation(mipsVersion);
         MIPSWriter.writeProgramToFile(Optimized_IRFile.substring(0, Optimized_IRFile.indexOf(".")) + ".s", mipsVersion);
     }

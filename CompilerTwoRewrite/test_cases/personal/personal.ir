@@ -1,0 +1,117 @@
+#start_function
+void main():
+int-list: a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, temp
+float-list: 
+	assign, a, 1
+	assign, b, 2
+	assign, c, 3
+	assign, d, 4
+	assign, e, 5
+	assign, f, 6
+	assign, g, 7
+	assign, h, 8
+	assign, i, 9
+	assign, j, 10
+	assign, k, 11
+	assign, l, 12
+	assign, m, 13
+	assign, n, 14
+	assign, o, 15
+	assign, p, 16
+	assign, q, 17
+	assign, r, 18
+	assign, s, 19
+	assign, t, 20
+	assign, u, 21
+	assign, v, 22
+	assign, w, 23
+	assign, x, 24
+	assign, y, 25
+	assign, z, 26
+create_array:
+	callr, temp, sampleFunc, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+	call, puti, temp
+	call, putc, 10
+#end_function
+
+#start_function
+int sampleFunc2(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, int l, int m, int n, int o, int p, int q, int r, int s, int t, int u, int v, int w, int x, int y, int z):
+int-list: temp, count
+float-list:
+	assign, temp, 0
+	assign, count, 1
+loop:
+	breq, end, count, 0
+	sub, count, count, 1
+	add, temp, temp, a
+	add, temp, temp, b
+	add, temp, temp, c
+	add, temp, temp, d
+	add, temp, temp, e
+	add, temp, temp, f
+	add, temp, temp, g
+	add, temp, temp, h
+	add, temp, temp, i
+	add, temp, temp, j
+	add, temp, temp, k
+	add, temp, temp, l
+	add, temp, temp, m
+	add, temp, temp, n
+	add, temp, temp, o
+	add, temp, temp, p
+	add, temp, temp, q
+	add, temp, temp, r
+	add, temp, temp, s
+	add, temp, temp, t
+	add, temp, temp, u
+	add, temp, temp, v
+	add, temp, temp, w
+	add, temp, temp, x
+	add, temp, temp, y
+	add, temp, temp, z
+end:
+	return, temp
+#end_function
+
+#start_function
+int sampleFunc(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, int l, int m, int n, int o, int p, int q, int r, int s, int t, int u, int v, int w, int x, int y, int z):
+int-list: temp, count
+float-list:
+	assign, temp, 0
+	callr, count, geti
+loop:
+	breq, end, count, 0
+	sub, count, count, 1
+	add, temp, temp, a
+	add, temp, temp, b
+	add, temp, temp, c
+	add, temp, temp, d
+	add, temp, temp, e
+	add, temp, temp, f
+	add, temp, temp, g
+	add, temp, temp, h
+	add, temp, temp, i
+	add, temp, temp, j
+	add, temp, temp, k
+	add, temp, temp, l
+	add, temp, temp, m
+	add, temp, temp, n
+	add, temp, temp, o
+	add, temp, temp, p
+	add, temp, temp, q
+	add, temp, temp, r
+	add, temp, temp, s
+	add, temp, temp, t
+	add, temp, temp, u
+	add, temp, temp, v
+	add, temp, temp, w
+	add, temp, temp, x
+	add, temp, temp, y
+	add, temp, temp, z
+	goto, loop
+end:
+	callr, count, sampleFunc2, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+	add, temp, temp, count
+	return, temp
+#end_function
+

@@ -19,7 +19,8 @@ public class InstructionSelection {
         "$19", "$20", "$21", "$22", "$23", "$24", "$25", "$29", "$ra"};  // Registers we can override
         // NOTE: For this calling convention, I deem every register usable except for $0, $1, $26, and $27.
         // All other registers must be preserved between subroutine calls
-        // $30 is now being used as a temporaray operator, now reserved
+        // $30 or $fp is now being used as a temporaray operator, now reserved
+        // $28 or $gp is now reserved for spill operations
     public static String[] usableRegisters = new String[] {"$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18",
     "$19", "$20", "$21", "$22", "$23", "$24", "$25", "$29"};
     public static String[] reserved = new String[] {"$0", "$1", "$26", "$27", "$30", "$31",
@@ -729,11 +730,6 @@ public class InstructionSelection {
             
         }
     }
-
-    public static void spillAllRegister() {
-
-    }
-
 
     public static void testSetup() {
         registerValuePair.put("a", "$2");

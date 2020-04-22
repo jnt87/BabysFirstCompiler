@@ -42,4 +42,31 @@ public class RegisterAllocator {
             }
         }
     }
+
+    public static void spillAlgorithm(HashMap<IRFunction, List<String>> info, List<String> spillList, HashMap<String, String> pairing) {
+        String init = "";
+        int numSpill = spillList.size() * 4;
+
+        // Current plan is to use another register to hold onto the spill value
+
+        // init += String.format("\tmove %s, %s\n", "$30", "$a0");
+        init += String.format("\tli %s, %d\n", "$v0", 9);
+        init += String.format("\tli %s, %d\n", "$a0", numSpill);
+        init += String.format("\tsyscall\n");
+        init += String.format("\tmove %s, %s\n", "$gp", "$v0");
+
+        // the above code handles the case where the register needs to be spilled
+
+        for (String toSpill : spillList) {
+            
+        }
+
+        for (IRFunction func : info.keySet()) {
+            System.out.println("Printing function " + func.name);
+
+            for (String line : info.get(func)) {
+                System.out.println(":" + line);
+            }
+        }
+    }
 }
