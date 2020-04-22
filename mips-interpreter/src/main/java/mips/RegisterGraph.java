@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Stack;
 
 public class RegisterGraph {
@@ -51,7 +52,12 @@ public class RegisterGraph {
 		return this.nodes.toString();
 	}
 	
-	//Coloring using Chaiting-Brigs
+	/**
+	 * Coloring algorithm that changes the color of the nodes
+	 * 
+	 * @param k 	Number of colors available
+	 * @return		Boolean indicating if coloring was done without spilling
+	 */
 	public boolean color(int k) {
 		Stack<RegisterNode> stack = new Stack<>();
 		for (RegisterNode node:this.nodes) {
@@ -71,7 +77,13 @@ public class RegisterGraph {
 		return false;
 	}
 	
-	//Replace registers
+	/**
+	 * Generates the assembly after replacing the virtual registers by physical ones
+	 * 
+	 * @param assembly 			String of the assembly code
+	 * @param freeRegisters		List of free physical registers
+	 * @return					String with the assembly after register allocation
+	 */
 	public String replaceRegisters(String assembly, ArrayList<String> freeRegisters) {
 		String newAssembly = new String();
 		for (int ii = 0; ii<assembly.length(); ii++) {
@@ -91,7 +103,13 @@ public class RegisterGraph {
 		return newAssembly;
 	}
 	
-	//Get the register name from the dollar character
+	/**
+	 * Gets the name of a register from the position of the '$' that precedes it 
+	 * 
+	 * @param assembly 		String of the assembly code
+	 * @param dollarIndex 	Index representing the position of the dollar sign
+	 * @return 				String containing the name of the register
+	 */
 	public String getRegisterName(String assembly, int dollarIndex) {
 		String registerName = new String();
 		int i = dollarIndex+1;
@@ -107,7 +125,14 @@ public class RegisterGraph {
 		return registerName;
 	}
 	
-	//Return the new name for the register
+	
+	/**
+	 * Calculates the name of the physical register associated with a virtual one once coloring finished
+	 * 
+	 * @param registerToReplace	String without '$' that has to be replaced
+	 * @param freeRegisters		List of free physical registers
+	 * @return 					String with the name of the physical register
+	 */
 	public String replaceName(String registerToReplace, ArrayList<String> freeRegisters) {
 		for(RegisterNode node:this.nodes) {
 			if (node.register.equals("$"+registerToReplace)) {
@@ -122,5 +147,36 @@ public class RegisterGraph {
 		}
 		
 		return null;
+	}
+	
+	
+	/**
+	 * Gets the virtual registers that need to be spilled after coloring
+	 * 
+	 * @return		List of registers that need to be spilled
+	 */
+	public ArrayList<String> registersToSpill(){
+		ArrayList<String> returnList = new ArrayList();
+		for (RegisterNode node:this.nodes) {
+			if (node.color == -1) returnList.add(node.register);
+		}
+		return returnList;
+	}
+	
+	
+	/**
+	 * Gets hashmap of the virtual registers as key and their corresponding physical one
+	 * 
+	 * @param freeRegisters		List of free registers
+	 * @return					Hashmap with the assignment
+	 */
+	public HashMap<String,String> correspondingPhysicalRegisters(ArrayList freeRegisters){
+		HashMap<String,String> returnHashMap = new HashMap<String,String>();
+		
+		for (RegisterNode node:this.nodes) {
+			if (node.color != -1) returnHashMap.put(node.register, freeRegisters.get(node.color).toString());
+		}
+		
+		return returnHashMap;
 	}
 }
