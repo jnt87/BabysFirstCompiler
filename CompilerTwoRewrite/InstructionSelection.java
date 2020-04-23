@@ -16,15 +16,15 @@ public class InstructionSelection {
 
     public static String[] preserveRegisters = new String[] {"$a0", "$a1", "$a2",
         "$a3", "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18",
-        "$19", "$20", "$21", "$22", "$23", "$24", "$25", "$29", "$ra"};  // Registers we can override
+        "$19", "$20", "$21", "$22", "$23", "$29", "$ra"};  // Registers we can override
         // NOTE: For this calling convention, I deem every register usable except for $0, $1, $26, and $27.
         // All other registers must be preserved between subroutine calls
         // $30 or $fp is now being used as a temporaray operator, now reserved
         // $28 or $gp is now reserved for spill operations
     public static String[] usableRegisters = new String[] {"$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18",
-    "$19", "$20", "$21", "$22", "$23", "$24", "$25", "$29"};
-    public static String[] reserved = new String[] {"$0", "$1", "$26", "$27", "$30", "$31",
-        "$zero", "$at", "k0", "k1", "$fp", "$ra"};
+    "$19", "$20", "$21", "$22", "$23"};
+    public static String[] reserved = new String[] {"$0", "$1", "$24", "$25", "$26", "$27","$28", "$29", "$30", "$31",
+        "$zero", "$at", "$t8", "$t9", "$k0", "$k1", "$gp", "$sp", "$fp", "$ra"};
     
     public static boolean virtualRegConvention = false;
     private static HashMap<String, List<String>> spilledRegisters;      // the key is the function name and the value is a list of spilt registers
@@ -70,7 +70,6 @@ public class InstructionSelection {
             System.out.println("The var is " + function.variables);
             System.out.println("The param is " + function.parameters);
             for (IRVariableOperand var : function.variables) {
-                System.out.println("The var is " + var.getName());
                 String init = "";
                 if (!function.parameters.contains(var) && var.type instanceof IRArrayType) {
                     System.out.println("Array found");
@@ -186,7 +185,7 @@ public class InstructionSelection {
     }
 
     public static String assign(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#assign\n";
         IROperand[] operands = instruction.operands;
         if (operands.length > 2) {
             return array_assign(instruction);
@@ -201,7 +200,7 @@ public class InstructionSelection {
     }
 
     public static String array_assign(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#array_assign\n";
         IROperand[] operands = instruction.operands;
         try {
             line += String.format("\tli %s, %s\n", "$30", operands[2].toString());
@@ -227,7 +226,7 @@ public class InstructionSelection {
     }
 
     public static String add(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#add\n";
         IROperand[] operands = instruction.operands;
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
             String storeTo = getRegisterVar(operands[0].toString());
@@ -251,7 +250,7 @@ public class InstructionSelection {
     }
 
     public static String sub(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#sub\n";
         IROperand[] operands = instruction.operands;
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
             String storeTo = getRegisterVar(operands[0].toString());
@@ -275,7 +274,7 @@ public class InstructionSelection {
     }
     
     public static String mult(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#mult\n";
         IROperand[] operands = instruction.operands;
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
             String storeTo = getRegisterVar(operands[0].toString());
@@ -301,7 +300,7 @@ public class InstructionSelection {
     }
 
     public static String div(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#div\n";
         IROperand[] operands = instruction.operands;
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
             String storeTo = getRegisterVar(operands[0].toString());
@@ -327,7 +326,7 @@ public class InstructionSelection {
     }
 
     public static String and(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#and\n";
         IROperand[] operands = instruction.operands;
         String storeTo = getRegisterVar(operands[0].toString());
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
@@ -351,7 +350,7 @@ public class InstructionSelection {
     }
 
     public static String or(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#or\n";
         IROperand[] operands = instruction.operands;
         String storeTo = getRegisterVar(operands[0].toString());
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
@@ -375,11 +374,11 @@ public class InstructionSelection {
     }
 
     public static String goto_op(IRInstruction instruction) {
-        return String.format("\tj %s\n", instruction.operands[0].toString());
+        return "\t#goto\n" + String.format("\tj %s\n", instruction.operands[0].toString());
     }
 
     public static String branch(IRInstruction instruction, String command) {
-        String line = "";
+        String line = "\t#branch\n";
         IROperand[] operands = instruction.operands;
         String add1 = "";
         String add2 = "";
@@ -421,7 +420,7 @@ public class InstructionSelection {
     }
 
     public static String return_op(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#return\n";
         if (checkImmediate(instruction.operands[0].toString())) {
             line += String.format("\tli %s, %s\n", "$v0",instruction.operands[0].toString());
             line += String.format("\tjr %s\n", "$ra");
@@ -433,7 +432,7 @@ public class InstructionSelection {
     }
 
     public static String call(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#call\n";
         IROperand[] operands = instruction.operands;
         switch (operands[0].toString().toLowerCase()) {
             case "puti":
@@ -466,7 +465,7 @@ public class InstructionSelection {
     }
 
     public static String callr(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#callr\n";
         IROperand[] operands = instruction.operands;
         
         switch (operands[1].toString().toLowerCase()) {
@@ -497,7 +496,7 @@ public class InstructionSelection {
     }
 
     public static String array_store(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#array_store\n";
         IROperand[] operands = instruction.operands;
         System.out.println("Array Store Instructions " + instruction);
         // if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
@@ -532,15 +531,11 @@ public class InstructionSelection {
             line += String.format("\tadd %s, %s, %s\n", "$30", getRegisterVar(operands[1].toString()), "$30");
             line += String.format("\tsw %s, 0(%s)\n", "$3", "$30");
         }
-
-
-
-
         return line;
     }
 
     public static String array_load(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#array_load\n";
         IROperand[] operands = instruction.operands;
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
             line += String.format("\tli %s, %d\n", "$30", 4);
@@ -558,7 +553,7 @@ public class InstructionSelection {
 
     // Method meant to condense array_store and array_load
     public static String array_op(IRInstruction instruction, String op) {
-        String line = "";
+        String line = "\t#array_op\n";
         IROperand[] operands = instruction.operands;
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
             line += String.format("\tadd %s, %s, $s\n", "$30", getRegisterVar(operands[1].toString()), getRegisterVar(operands[2].toString()));
@@ -576,7 +571,7 @@ public class InstructionSelection {
     }
 
     public static String geti(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#geti\n";
         line += String.format("\tli %s, %d\n", "$v0", 5);
         line += String.format("\tsyscall\n");
         line += String.format("\tmove %s, %s\n", getRegisterVar(instruction.operands[0].toString()), "$v0");
@@ -584,7 +579,7 @@ public class InstructionSelection {
     }
 
     public static String getf(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#getf\n";
         line += String.format("\tli %s, %d\n", "$v0", 6);
         line += String.format("\tsyscall\n");
         line += String.format("\tmove %s, %s\n", getRegisterVar(instruction.operands[0].toString()), "$v0");
@@ -593,7 +588,7 @@ public class InstructionSelection {
 
     // Note that geti and getc has the same implementation
     public static String getc(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#getc\n";
         line += String.format("\tli %s, %d\n", "$v0", 5);
         line += String.format("\tsyscall\n");
         line += String.format("\tmove %s, %s\n", getRegisterVar(instruction.operands[0].toString()), "$v0");
@@ -601,7 +596,7 @@ public class InstructionSelection {
     }
 
     public static String puti(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#puti\n";
         line += String.format("\tmove %s, %s\n", "$30", "$a0");
         line += String.format("\tmove %s, %s\n", "$a0", getRegisterVar(instruction.operands[1].toString()));
         line += String.format("\tli %s, %d\n", "$v0", 1);
@@ -611,7 +606,7 @@ public class InstructionSelection {
     }
 
     public static String putf(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#putf\n";
         line += String.format("\tmove %s, %s\n", "$30", "$f12");
         line += String.format("\tmove %s, %s\n", "$f12", getRegisterVar(instruction.operands[1].toString()));
         line += String.format("\tli %s, %d\n", "$v0", 2);
@@ -621,7 +616,7 @@ public class InstructionSelection {
     }
 
     public static String putc(IRInstruction instruction) {
-        String line = "";
+        String line = "\t#putc\n";
         line += String.format("\tmove %s, %s\n", "$30", "$a0");
         line += String.format("\tli %s, %d\n", "$v0", 11);
         line += String.format("\tli %s, %s\n", "$a0", instruction.operands[1].toString());
@@ -664,7 +659,6 @@ public class InstructionSelection {
 
     public static String restoreRegisters(IRInstruction instruction) {
         String convention = "";
-        System.out.println("restoring");
         if (virtualRegConvention) {
             for (int i = usedRegisters.get(currFunc).size() - 1; i >= 0; i--) {
                 String register = usedRegisters.get(currFunc).get(i);
@@ -708,7 +702,6 @@ public class InstructionSelection {
             return registerValuePair.get(var);
         }
         if (checkImmediate(var)) {
-            System.out.println("occurred " + var);
             test = true;
         }
         for (int i = 0; true; i++) {

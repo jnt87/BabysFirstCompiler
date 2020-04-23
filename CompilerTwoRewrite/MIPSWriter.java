@@ -25,14 +25,13 @@ public class MIPSWriter {
                     writer.print(String.format("\tli %s, 0\n", pair.get(label)));
                 }
             }
+            writer.println("j main");
         } else {
             for (String label : InstructionSelection.preserveRegisters) {
                 writer.print(String.format("\tli %s, 0\n", label));
             }
         }
         
-        
-        writer.println("j main");
 
         for (IRFunction function : info.keySet()) {
             List<String> bodyList = info.get(function);
