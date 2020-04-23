@@ -136,8 +136,6 @@ public class LiveRange {
                 continue;   // ignores registers that matches this criteria
                             // replace conditional with a custom function if ignoring more than just certain registers
                             // TODO: CHECK REGISTERS TO IGNORE
-            } else {
-                System.out.println("Checking register " + register);
             }
             if (!liveRanges.containsKey(register)) {
                 liveRanges.put(register, new LiveRange().new Vector(i, i));

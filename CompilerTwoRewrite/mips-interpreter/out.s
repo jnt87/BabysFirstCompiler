@@ -354,43 +354,43 @@ loop_sampleFunc2:
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $a0
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $a1
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $a2
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $a3
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $13
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $12
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $11
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $10
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $9
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $8
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t8, 20($gp)
 	lw $t9, 0($gp)
@@ -414,7 +414,7 @@ loop_sampleFunc2:
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $22
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t8, 20($gp)
 	lw $t9, 16($gp)
@@ -428,39 +428,39 @@ loop_sampleFunc2:
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $18
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $17
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $20
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $19
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $15
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $14
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $16
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $23
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $21
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 end_sampleFunc2:
 	#return
 	lw $t8, 20($gp)
@@ -545,47 +545,47 @@ loop_sampleFunc:
 	#sub
 	lw $t9, 28($gp)
 	addi $t9, $t9, -1
-	sw $t8, 28($gp)
+	sw $t9, 28($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $a0
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $a1
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $a2
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $a3
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $13
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $12
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $11
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $10
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $9
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $8
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t8, 20($gp)
 	lw $t9, 0($gp)
@@ -609,7 +609,7 @@ loop_sampleFunc:
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $22
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t8, 20($gp)
 	lw $t9, 16($gp)
@@ -623,39 +623,39 @@ loop_sampleFunc:
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $18
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $17
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $20
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $19
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $15
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $14
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $16
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $23
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#add
 	lw $t9, 20($gp)
 	add $t9, $t9, $21
-	sw $t8, 20($gp)
+	sw $t9, 20($gp)
 	#goto
 	j loop_sampleFunc
 end_sampleFunc:
