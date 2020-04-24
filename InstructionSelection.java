@@ -506,7 +506,11 @@ public class InstructionSelection {
     public static String putf(IRInstruction instruction) {
         String line = "\t#putf\n";
         line += String.format("\tmove %s, %s\n", "$30", "$f12");
-        line += String.format("\tmove %s, %s\n", "$f12", getRegisterVar(instruction.operands[1].toString()));
+        if (checkImmediate(instruction.operands[1].toString())) {
+            line += String.format("\tmove %s, %s\n", "$f12", instruction.operands[1].toString());
+        } else {
+            line += String.format("\tmove %s, %s\n", "$f12", getRegisterVar(instruction.operands[1].toString()));
+        }
         line += String.format("\tli %s, %d\n", "$v0", 2);
         line += String.format("\tsyscall\n");
         line += String.format("\tmove %s, %s\n", "$f12", "$30");
