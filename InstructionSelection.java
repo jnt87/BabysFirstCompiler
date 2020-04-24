@@ -492,7 +492,11 @@ public class InstructionSelection {
     public static String puti(IRInstruction instruction) {
         String line = "\t#puti\n";
         line += String.format("\tmove %s, %s\n", "$30", "$a0");
-        line += String.format("\tmove %s, %s\n", "$a0", getRegisterVar(instruction.operands[1].toString()));
+        if (checkImmediate(instruction.operands[1].toString())) {
+            line += String.format("\tmove %s, %s\n", "$a0", instruction.operands[1].toString());
+        } else {
+            line += String.format("\tmove %s, %s\n", "$a0", getRegisterVar(instruction.operands[1].toString()));
+        }
         line += String.format("\tli %s, %d\n", "$v0", 1);
         line += String.format("\tsyscall\n");
         line += String.format("\tmove %s, %s\n", "$a0", "$30");
@@ -513,7 +517,11 @@ public class InstructionSelection {
         String line = "\t#putc\n";
         line += String.format("\tmove %s, %s\n", "$30", "$a0");
         line += String.format("\tli %s, %d\n", "$v0", 11);
-        line += String.format("\tli %s, %s\n", "$a0", instruction.operands[1].toString());
+        if (checkImmediate(instruction.operands[1].toString())) {
+            line += String.format("\tli %s, %s\n", "$a0", instruction.operands[1].toString());
+        } else {
+            line += String.format("\tli %s, %s\n", "$a0", getRegisterVar(instruction.operands[1].toString()));
+        }
         line += String.format("\tsyscall\n");
         line += String.format("\tmove %s, %s\n", "$a0", "$30");
         return line;
