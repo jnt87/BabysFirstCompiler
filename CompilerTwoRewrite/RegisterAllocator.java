@@ -45,12 +45,13 @@ public class RegisterAllocator {
     }
 
     public static List<String> spillAlgorithm(List<String> info, List<String> spillList, HashMap<String, String> pairing, List<RegisterNode> dependencies) {
-        System.out.println("the spill list is " + spillList);
-        System.out.println("The allocation choice is " + pairing);
         List<String> info_result = new ArrayList<>();
         if (spillList.size() != 0) {
             String init = "";
             int numSpill = spillList.size() * 4;
+            // System.out.println("The size of the spill list is " + numSpill);
+            // System.out.println("the spill list is " + spillList);
+            // System.out.println("The allocation choice is " + pairing);
             init += String.format("\tli %s, %d\n", "$v0", 9);
             init += String.format("\tli %s, %d\n", "$a0", numSpill);
             init += String.format("\tsyscall\n");
@@ -65,6 +66,7 @@ public class RegisterAllocator {
                 }
                 String[] decompose = line.trim().split(", | ");
                 for (int i = 0; i < decompose.length; i++) {
+
                     if (decompose[i].contains("(")) {
                         decompose[i] = decompose[i].substring(decompose[i].indexOf("(") + 1, decompose[i].indexOf(")"));
                     }
@@ -72,6 +74,7 @@ public class RegisterAllocator {
 
                 int[] found = checkHowManySpill(decompose, spillList);
                 int count = numOnes(found);
+ 
                 switch (count) {
                     case 0:
                         info_result.add(info.get(var));
@@ -88,34 +91,19 @@ public class RegisterAllocator {
                         if (isMove(decompose[0], i)) {
                             if (i == 1) {
                                 // spill the target
-                                System.out.println("Case detected");
                                 String newLine = String.format("\tsw %s, %d(%s)\n", decompose[2], spillList.indexOf(spillReg) * 4, "$gp");
-                                
-                                // info.set(var, newLine);
-                                System.out.println(newLine);
                                 info_result.add(newLine);
                             } else {
-                                System.out.println("The instruction2 occur is " + info.get(var));
-                                
-                                // spill on the source, same code as for a use
-                                // info.set(var, info.get(var).replaceAll("\\" + spillReg, "\\$t8"));
                                 String newLine = String.format("\tlw %s, %d(%s)\n", decompose[1], spillList.indexOf(spillReg) * 4, "$gp");
-                                // info.add(var, newLine);
                                 info_result.add(newLine);
                                 info.add(info.get(var).replaceAll("\\" + spillReg, "\\$t8"));
-                                System.out.println(newLine);
-                                System.out.println(info.get(var).replaceAll("\\" + spillReg, "\\$t8"));
                             }
                         } else if (isDef(decompose[0], i)) {
-                            // info.set(var, info.get(var).replaceAll("\\" + spillReg, "\\$t8"));
                             String newLine = String.format("\tsw %s, %d(%s)\n", "$t8", spillList.indexOf(spillReg) * 4, "$gp");
-                            // info.add(var + 1, newLine);
                             info_result.add(info.get(var).replaceAll("\\" + spillReg, "\\$t8"));
                             info_result.add(newLine);
                         } else if (isUse(decompose[0], i)) {
-                            // info.set(var, info.get(var).replaceAll("\\" + spillReg, "\\$t8"));
                             String newLine = String.format("\tlw %s, %d(%s)\n", "$t8", spillList.indexOf(spillReg) * 4, "$gp");
-                            // info.add(var, newLine);
                             info_result.add(newLine);
                             info_result.add(info.get(var).replaceAll("\\" + spillReg, "\\$t8"));
                         }
@@ -137,35 +125,24 @@ public class RegisterAllocator {
                         }
                         String spillReg1 = decompose[loc1];
                         String spillReg2 = decompose[loc2];
-                        System.out.println("Decompose is " + Arrays.asList(decompose));
                         if (isMove(decompose[0], 0)) {
                             String newLine = String.format("\tlw %s, %d(%s)\n", "$t9", spillList.indexOf(spillReg2) * 4, "$gp");
                             newLine += String.format("\tsw %s, %d(%s)\n", "$t9", spillList.indexOf(spillReg1) * 4, "$gp");
-                            // info.set(var, newLine);
                             info_result.add(newLine);
-                            System.out.println(newLine);
                         } else if (loc1 != 1 || (loc1 == 1 && !isDef(decompose[0], loc1))) {
                             // case both is use
-                            // info.set(var, info.get(var).replaceAll("\\" + spillReg1, "\\$t8"));
-                            // info.set(var, info.get(var).replaceAll("\\" + spillReg2, "\\$t9"));
                             String newLine = String.format("\tlw %s, %d(%s)\n", "$t8", spillList.indexOf(spillReg1) * 4, "$gp");
-                            // info.add(var, newLine);
                             newLine += String.format("\tlw %s, %d(%s)\n", "$t9", spillList.indexOf(spillReg2) * 4, "$gp");
-                            // info.add(var, newLine);
 
                             info_result.add(newLine);
                             info_result.add(info.get(var).replaceAll("\\" + spillReg1, "\\$t8").replaceAll("\\" + spillReg2, "\\$t9"));
                         } else {
                             // case first one is a def
-                            // info.set(var, info.get(var).replaceAll("\\" + spillReg2, "\\$t9").replaceAll("\\" + spillReg1, "\\$t8"));
                             String newLine = String.format("\tlw %s, %d(%s)\n", "$t9", spillList.indexOf(spillReg2) * 4, "$gp");
-                            // info.add(var, newLine);
-
                             String newLine2 = String.format("\tsw %s, %d(%s)\n", "$t9", spillList.indexOf(spillReg1) * 4, "$gp");
-                            // info.add(var + 2, newLine2);
 
                             info_result.add(newLine);
-                            info_result.add(info.get(var).replaceAll("\\" + spillReg2, "\\$t9").replaceAll("\\" + spillReg1, "\\$t8"));
+                            info_result.add(info.get(var).replaceAll("\\" + spillReg2, "\\$t9").replaceAll("\\" + spillReg1, "\\$t9"));
                             info_result.add(newLine2);
                         }
                         break;

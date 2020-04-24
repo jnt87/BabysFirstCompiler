@@ -4,12 +4,9 @@ import java.util.HashSet;
 import java.io.PrintWriter;
 import java.io.File;
 import ir.IRFunction;
-import ir.datatype.IRArrayType;
-import ir.operand.IRVariableOperand;
 
 public class MIPSWriter {
     public static void writeProgramToFile(String fileName, HashMap<IRFunction, List<String>> info) throws Exception {
-        System.out.println("File name is " + fileName);
         PrintWriter writer = new PrintWriter(new File(fileName));
         writer.println(".text");
         writer.println(".globl main");
@@ -26,12 +23,7 @@ public class MIPSWriter {
                 }
             }
             writer.println("j main");
-        } else {
-            for (String label : InstructionSelection.preserveRegisters) {
-                writer.print(String.format("\tli %s, 0\n", label));
-            }
         }
-        
 
         for (IRFunction function : info.keySet()) {
             List<String> bodyList = info.get(function);
@@ -59,7 +51,6 @@ public class MIPSWriter {
                 
                 writer.write(body);
             }
-            System.out.println("Function " + function.name + " with " + labels);
             writer.flush();
         }
         writer.close();

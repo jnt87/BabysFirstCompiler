@@ -1,8 +1,6 @@
 import ir.*;
 import mips.*;
 
-import java.io.PrintStream;
-import java.io.*;
 import java.util.*;
 
 public class MipsTranslator {
@@ -42,24 +40,16 @@ public class MipsTranslator {
         // converted the dependencie to another form
         HashMap<IRFunction, List<RegisterNode>> dependencies = convertForm(dependencies_orig, mipsVersion.keySet());
 
-        System.out.println("dependencies is " + dependencies_orig);
-
         for (IRFunction func : dependencies.keySet()) {
             RegisterGraph graph = new RegisterGraph(dependencies.get(func));
             // graph.color(InstructionSelection.usableRegisters.length);
             graph.color(0);
             HashMap<String, String> pairing = graph.correspondingPhysicalRegisters(Arrays.asList(InstructionSelection.usableRegisters));
             List<String> spillList = graph.registersToSpill();
-            // System.out.println("Graph generated");
-            // System.out.println("Orig list is " + Arrays.asList(InstructionSelection.usableRegisters));
-            // System.out.println("Pairing is " + pairing);
             mipsVersion.put(func, RegisterAllocator.spillAlgorithm(mipsVersion.get(func), spillList, pairing, dependencies.get(func)));
         }
-        // System.out.println("replacement complete");
-        // System.out.println(mipsVersion);
-        // System.out.println("The completed code is " + code);
-        // RegisterAllocator.spillAlgorithm(mipsVersion, new ArrayList<>(), new HashMap<>());
 
+        // Below is old allocator, does not handle spilling
         //RegisterAllocator.test_allocation(mipsVersion);
         MIPSWriter.writeProgramToFile(Optimized_IRFile.substring(0, Optimized_IRFile.indexOf(".")) + ".s", mipsVersion);
     }

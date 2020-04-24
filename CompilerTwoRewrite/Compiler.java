@@ -1,7 +1,6 @@
 import ir.*;
 
 import java.io.PrintStream;
-import java.io.*;
 import java.util.*;
 
 

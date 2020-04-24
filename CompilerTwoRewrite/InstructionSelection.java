@@ -1,6 +1,5 @@
 import java.util.*;
 import ir.*;
-import ir.IRInstruction.OpCode;
 import ir.datatype.IRArrayType;
 import ir.operand.IROperand;
 import ir.operand.IRVariableOperand;
@@ -12,7 +11,8 @@ public class InstructionSelection {
     public static HashMap<IRFunction, List<String>> usedRegisters;
     private static IRFunction currFunc;
     private static boolean conversionComplete = false;
-    private static boolean test = false;
+
+    private static boolean DEBUG = false;
 
     public static String[] preserveRegisters = new String[] {"$a0", "$a1", "$a2",
         "$a3", "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18",
@@ -54,21 +54,12 @@ public class InstructionSelection {
             translated.put(function, new ArrayList<String>());
             translated.get(function).add(String.format("%s():\n", function.name));
             translated.get(function).add(extractArguments(function.parameters));
-            System.out.println("Arguments " + function.parameters + " for function " + function.name);
-            // System.out.print(translated.get(function).get(0));
-            // System.out.print(translated.get(function).get(1));
-
-            // System.out.println("Variables " + function.variables);
-            // for (IRVariableOperand var : function.variables) {
-            //     for (IRVariableOperand var2 : function.parameters) {
-            //         if (var == var2) {
-            //             System.out.println("Found match var");
-            //         }
-            //     }
-            // }
+            if (DEBUG) {
+                System.out.println("Arguments " + function.parameters + " for function " + function.name);
+                System.out.println("The var is " + function.variables);
+                System.out.println("The param is " + function.parameters);    
+            }
             
-            System.out.println("The var is " + function.variables);
-            System.out.println("The param is " + function.parameters);
             for (IRVariableOperand var : function.variables) {
                 String init = "";
                 if (!function.parameters.contains(var) && var.type instanceof IRArrayType) {
@@ -77,11 +68,9 @@ public class InstructionSelection {
                     init += String.format("\tli %s, %d\n", "$a0", ((IRArrayType) var.type).getSize() * 4);
                     init += String.format("\tsyscall\n");
                     init += String.format("\tmove %s, %s\n", getRegisterVar(var.getName()), "$v0");
-                    System.out.println("Important");
-                    System.out.println(String.format("\tmove %s, %s\n", getRegisterVar(var.getName()), "$v0"));
-                    // init += String.format("\taddi %s, %s\n", "$0", "$v0");
                     init += String.format("\tmove %s, %s\n", "$a0", "$30");
                 } //else {
+                // this portion is in charge of preinitializing variables if this is needed (don't think so but maybe)
                 //     init += String.format("\tli %s, 0\n", getRegisterVar(var.getName()));
                 // }
                 translated.get(function).add(init);
@@ -155,14 +144,12 @@ public class InstructionSelection {
                         result = "YOU MESSED UP SOMEHOW";
                 }
                 translated.get(function).add(result);
-                // System.out.println("Original: " + instruc.toString());
-                // System.out.println("Mips: " + result);
-                // if (!result.equals("")) {
-                //     System.out.print(result);
-                // }
-                if (test) {
-                    System.out.println("ERROR INSTRUC " + instruc);
-                    test = false;
+                if (DEBUG) {
+                    // System.out.println("Original: " + instruc.toString());
+                    // System.out.println("Mips: " + result);
+                    // if (!result.equals("")) {
+                    //     System.out.print(result);
+                    // }
                 }
             }
 
@@ -175,8 +162,10 @@ public class InstructionSelection {
                 line += String.format("\tsyscall\n");
                 translated.get(function).add(line);
             }
-            System.out.println("Value Register Pair: " + registerValuePair);
-            System.out.println("----FUNCTION ENDED----");
+            if (DEBUG) {
+                System.out.println("Value Register Pair: " + registerValuePair);
+                System.out.println("----FUNCTION ENDED----");
+            }
         }
         conversionComplete = true;
         return translated;
@@ -212,16 +201,6 @@ public class InstructionSelection {
             line += String.format("\tsw %s, %d(%s)\n", "$30", (i * 4), getRegisterVar(operands[0].toString()));
         }
         return line;
-        // String line = "";
-        // line += String.format("\tmove %s, %s\n", "$30", "$a0");
-        // line += String.format("\tli %s, %d\n", "$v0", 9);
-        // line += String.format("\tli %s, %d\n", "$a0", ((IRArrayType) var.type).getSize() * 4);
-        // line += String.format("\tsyscall\n");
-        // line += String.format("\tmove %s, %s\n", getRegisterVar(var.getName()), "$v0");
-        // // init += String.format("\taddi %s, %s\n", "$0", "$v0");
-        // line += String.format("\tmove %s, %s\n", "$a0", "$30");
-        // System.out.println(line);
-        // return "";
     }
 
     public static String add(IRInstruction instruction) {
@@ -497,18 +476,6 @@ public class InstructionSelection {
     public static String array_store(IRInstruction instruction) {
         String line = "\t#array_store\n";
         IROperand[] operands = instruction.operands;
-        System.out.println("Array Store Instructions " + instruction);
-        // if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-        //     line += String.format("\tli %s, %d\n", "$30", 4);
-        //     line += String.format("\tmul %s, %s, %s\n", "$30", getRegisterVar(operands[2].toString()), "$30");
-        //     line += String.format("\tadd %s, %s, %s\n", "$30", getRegisterVar(operands[1].toString()), "$30");
-        //     line += String.format("\tsw %s, 0(%s)\n", getRegisterVar(operands[0].toString()), "$30");
-        // } else if (!checkImmediate(operands[1].toString()) && checkImmediate(operands[2].toString())) {
-        //     int offset = Integer.parseInt(operands[2].toString()) * 4;
-        //     line += String.format("\tsw %s, %d(%s)\n", getRegisterVar(operands[0].toString()), offset, getRegisterVar(operands[1].toString()));
-        // } else {
-        //     line += "\tWHAT THE HELL\n";
-        // }
 
         if (checkImmediate(operands[0].toString()) && !checkImmediate(operands[1].toString()) && checkImmediate(operands[2].toString())) {
             int offset = Integer.parseInt(operands[2].toString()) * 4;
@@ -523,13 +490,11 @@ public class InstructionSelection {
             line += String.format("\tadd %s, %s, %s\n", "$30", getRegisterVar(operands[1].toString()), "$30");
             line += String.format("\tsw %s, 0(%s)\n", getRegisterVar(operands[0].toString()), "$30");
         } else if (checkImmediate(operands[0].toString()) && !checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-            System.out.println("Case occurred for " + instruction);
             line += String.format("\tli %s, %s\n", "$v1", operands[0].toString());
             line += String.format("\tli %s, %d\n", "$30", 4);
             line += String.format("\tmul %s, %s, %s\n", "$30", getRegisterVar(operands[2].toString()), "$30");
             line += String.format("\tadd %s, %s, %s\n", "$30", getRegisterVar(operands[1].toString()), "$30");
             line += String.format("\tsw %s, 0(%s)\n", "$v1", "$30");
-            System.out.println("line is \n" + line);
         }
         return line;
     }
@@ -701,9 +666,7 @@ public class InstructionSelection {
         if (registerValuePair.containsKey(var)) {
             return registerValuePair.get(var);
         }
-        if (checkImmediate(var)) {
-            test = true;
-        }
+
         for (int i = 0; true; i++) {
             if (!registerValuePair.containsValue("$z" + i)) {
                 registerValuePair.put(var, "$z" + i);
@@ -722,17 +685,5 @@ public class InstructionSelection {
             registerList.add(spillRegister);
             
         }
-    }
-
-    public static void testSetup() {
-        registerValuePair.put("a", "$2");
-        registerValuePair.put("t1", "$30");
-        registerValuePair.put("t5", "$2");
-        registerValuePair.put("t6", "$3");
-        registerValuePair.put("t7", "$4");
-    }
-
-    public static void main(String[] args) {
-        System.out.println(checkImmediate("x"));
     }
 }

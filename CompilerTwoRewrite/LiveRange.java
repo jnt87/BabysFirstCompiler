@@ -113,10 +113,14 @@ public class LiveRange {
 
         for (String function : functionLiveRanges.keySet()) {
             HashMap<String, Vector> func = functionLiveRanges.get(function);
-            System.out.printf("\nFunction is %s\n-------------------\n", function);
+            if (DEBUG) {
+                System.out.printf("\nFunction is %s\n-------------------\n", function);
+            }
             for (String register : func.keySet()) {
                 Vector vec = func.get(register);
-                System.out.printf("Register %s has a live range from %d to %d\n", register, vec.liveStart, vec.liveEnd);
+                if (DEBUG) {
+                    System.out.printf("Register %s has a live range from %d to %d\n", register, vec.liveStart, vec.liveEnd);
+                }
             }
         }
 
@@ -125,14 +129,14 @@ public class LiveRange {
 
     public static HashMap<String, Vector> calculate_live(String[] program) {
         HashMap<String, Vector> liveRanges = new HashMap<String, Vector>();
-
-        System.out.println("Program in live range is ---------------------------------------------\n" + program[0]);
+        if (DEBUG) {
+            System.out.println("Program in live range is ---------------------------------------------\n" + program[0]);
+        }
         // Purpose of this variable is to keep track of each label and where they are
         HashMap<String, Integer> label_loc = new HashMap<>();
         
         for (int i = 0; i < program.length; i++) {
             if (!program[i].contains(" ") && !program[i].contains("#") && !program[i].contains("syscall")) {
-                System.out.println("line is " + program[i]);
                 label_loc.put(program[i], i);
             }
             if (new StringTokenizer(program[i], " |, ").countTokens() < 3) {
@@ -149,9 +153,7 @@ public class LiveRange {
                 for (int j = i + 1; j < program.length; j++) {
                     for (String label : label_loc.keySet()) {
                         if (program[j].contains(label)) {
-                            System.out.println("label detected in live range");
                             if (liveRanges.get(register).liveStart > label_loc.get(label)) {
-                                System.out.println("case foundasdasda");
                                 liveRanges.get(register).liveStart = label_loc.get(label);
                             }
                         }
@@ -214,30 +216,11 @@ public class LiveRange {
     private static String[] listToStringArray(List<String> list) {
         String[] strArray = new String[list.size()];
         System.arraycopy(list.toArray(), 0, strArray, 0, strArray.length);
-        //System.out.println("ARRAY CONVERTED IS " + Arrays.asList(strArray));
         return strArray;
     }
 
     private static boolean isCheckedRegister(String register) {
-        // String temp = register.replaceAll("\\$", "").trim();
         return !Arrays.asList(mipsRegisters).contains(register);
-
-        // if (Arrays.asList(parameterRegisters).contains(temp)) {
-        //     // System.out.printf("Register is %s and the verdict is true\n", temp);
-        //     return true;
-        // }
-        // try {
-        //     int reg_num = Integer.parseInt(temp);
-        //     if (reg_num >= 0 && reg_num <= 31) {
-        //         // System.out.printf("Register is %s and the verdict is true\n", temp);
-        //         return true;
-        //     }
-        // } catch (Exception e) {
-        //     // System.out.printf("Register is %s and the verdict is false\n", temp);
-        //     return false;
-        // }
-        // // System.out.printf("Register is %s and the verdict is false\n", temp);
-        // return false;
     }
 
     private static String concatenateProgram(List<String> program) {
