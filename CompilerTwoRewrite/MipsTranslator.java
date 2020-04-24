@@ -42,8 +42,8 @@ public class MipsTranslator {
 
         for (IRFunction func : dependencies.keySet()) {
             RegisterGraph graph = new RegisterGraph(dependencies.get(func));
-            // graph.color(InstructionSelection.usableRegisters.length);
-            graph.color(0);
+            graph.color(InstructionSelection.usableRegisters.length);
+            // graph.color(0);
             HashMap<String, String> pairing = graph.correspondingPhysicalRegisters(Arrays.asList(InstructionSelection.usableRegisters));
             List<String> spillList = graph.registersToSpill();
             mipsVersion.put(func, RegisterAllocator.spillAlgorithm(mipsVersion.get(func), spillList, pairing, dependencies.get(func)));
