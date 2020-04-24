@@ -16,7 +16,7 @@ public class InstructionSelection {
 
     public static String[] preserveRegisters = new String[] {"$a0", "$a1", "$a2",
         "$a3", "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18",
-        "$19", "$20", "$21", "$22", "$23", "$29", "$ra"};  // Registers we can override
+        "$19", "$20", "$21", "$22", "$23", "$28", "$29", "$ra"};  // Registers we can override
         // NOTE: For this calling convention, I deem every register usable except for $0, $1, $26, and $27.
         // All other registers must be preserved between subroutine calls
         // $30 or $fp is now being used as a temporaray operator, now reserved
@@ -72,7 +72,6 @@ public class InstructionSelection {
             for (IRVariableOperand var : function.variables) {
                 String init = "";
                 if (!function.parameters.contains(var) && var.type instanceof IRArrayType) {
-                    System.out.println("Array found");
                     init += String.format("\tmove %s, %s\n", "$30", "$a0");
                     init += String.format("\tli %s, %d\n", "$v0", 9);
                     init += String.format("\tli %s, %d\n", "$a0", ((IRArrayType) var.type).getSize() * 4);
@@ -524,12 +523,13 @@ public class InstructionSelection {
             line += String.format("\tadd %s, %s, %s\n", "$30", getRegisterVar(operands[1].toString()), "$30");
             line += String.format("\tsw %s, 0(%s)\n", getRegisterVar(operands[0].toString()), "$30");
         } else if (checkImmediate(operands[0].toString()) && !checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-            System.out.println("Case occurred");
-            line += String.format("\tli %s, %s\n", "$3", operands[0].toString());
+            System.out.println("Case occurred for " + instruction);
+            line += String.format("\tli %s, %s\n", "$v1", operands[0].toString());
             line += String.format("\tli %s, %d\n", "$30", 4);
             line += String.format("\tmul %s, %s, %s\n", "$30", getRegisterVar(operands[2].toString()), "$30");
             line += String.format("\tadd %s, %s, %s\n", "$30", getRegisterVar(operands[1].toString()), "$30");
-            line += String.format("\tsw %s, 0(%s)\n", "$3", "$30");
+            line += String.format("\tsw %s, 0(%s)\n", "$v1", "$30");
+            System.out.println("line is \n" + line);
         }
         return line;
     }

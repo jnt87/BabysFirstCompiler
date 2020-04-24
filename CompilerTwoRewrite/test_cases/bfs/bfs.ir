@@ -1,6 +1,6 @@
 #start_function
 void main():
-int-list: n, m, v[100], e[1000], en[100], q[100], p, i, j, k, c, x, t, now, tv, t0, t1, ii
+int-list: n, m, v[100], e[1000], en[100], q[100], p, i, j, k, c, x, t, now, tv, t0, t1, ii, temp
 float-list:
     assign, v, 100, 0
     assign, m, 10

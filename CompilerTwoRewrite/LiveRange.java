@@ -116,7 +116,7 @@ public class LiveRange {
             System.out.printf("\nFunction is %s\n-------------------\n", function);
             for (String register : func.keySet()) {
                 Vector vec = func.get(register);
-                // System.out.printf("Register %s has a live range from %d to %d\n", register, vec.liveStart, vec.liveEnd);
+                System.out.printf("Register %s has a live range from %d to %d\n", register, vec.liveStart, vec.liveEnd);
             }
         }
 
@@ -126,8 +126,15 @@ public class LiveRange {
     public static HashMap<String, Vector> calculate_live(String[] program) {
         HashMap<String, Vector> liveRanges = new HashMap<String, Vector>();
 
-
+        System.out.println("Program in live range is ---------------------------------------------\n" + program[0]);
+        // Purpose of this variable is to keep track of each label and where they are
+        HashMap<String, Integer> label_loc = new HashMap<>();
+        
         for (int i = 0; i < program.length; i++) {
+            if (!program[i].contains(" ") && !program[i].contains("#") && !program[i].contains("syscall")) {
+                System.out.println("line is " + program[i]);
+                label_loc.put(program[i], i);
+            }
             if (new StringTokenizer(program[i], " |, ").countTokens() < 3) {
                 continue;
             }
@@ -140,6 +147,15 @@ public class LiveRange {
             if (!liveRanges.containsKey(register)) {
                 liveRanges.put(register, new LiveRange().new Vector(i, i));
                 for (int j = i + 1; j < program.length; j++) {
+                    for (String label : label_loc.keySet()) {
+                        if (program[j].contains(label)) {
+                            System.out.println("label detected in live range");
+                            if (liveRanges.get(register).liveStart > label_loc.get(label)) {
+                                System.out.println("case foundasdasda");
+                                liveRanges.get(register).liveStart = label_loc.get(label);
+                            }
+                        }
+                    }
                     if (new StringTokenizer(program[j], " |, ").countTokens() < 3) {
                         continue;
                     }

@@ -20,250 +20,451 @@
 	li $21, 0
 	li $22, 0
 	li $23, 0
+	li $28, 0
 	li $29, 0
 	li $ra, 0
 main:
 	li $v0, 9
-	li $a0, 40
+	li $a0, 60
 	syscall
 	move $gp, $v0
-	#assign
-	li $30, 1
-	sw $30, 24($gp)
-	#assign
-	li $30, 2
-	sw $30, 28($gp)
-	#assign
-	li $30, 3
-	sw $30, 32($gp)
-	#assign
-	li $30, 4
-	sw $30, 36($gp)
-	#assign
-	li $30, 5
-	move $23, $30
-	#assign
-	li $30, 6
-	move $22, $30
-	#assign
-	li $30, 7
-	move $21, $30
-	#assign
-	li $30, 8
-	move $20, $30
-	#assign
-	li $30, 9
-	move $19, $30
+	move $30, $a0
+	li $v0, 9
+	li $a0, 4000
+	syscall
+	sw $v0, 20($gp)
+	move $a0, $30
+	move $30, $a0
+	li $v0, 9
+	li $a0, 400
+	syscall
+	sw $v0, 24($gp)
+	move $a0, $30
+	move $30, $a0
+	li $v0, 9
+	li $a0, 400
+	syscall
+	sw $v0, 28($gp)
+	move $a0, $30
+	move $30, $a0
+	li $v0, 9
+	li $a0, 400
+	syscall
+	sw $v0, 32($gp)
+	move $a0, $30
+	#array_assign
+	li $30, 0
+	lw $t8, 32($gp)
+	sw $30, 0($t8)
+	lw $t8, 32($gp)
+	sw $30, 4($t8)
+	lw $t8, 32($gp)
+	sw $30, 8($t8)
+	lw $t8, 32($gp)
+	sw $30, 12($t8)
+	lw $t8, 32($gp)
+	sw $30, 16($t8)
+	lw $t8, 32($gp)
+	sw $30, 20($t8)
+	lw $t8, 32($gp)
+	sw $30, 24($t8)
+	lw $t8, 32($gp)
+	sw $30, 28($t8)
+	lw $t8, 32($gp)
+	sw $30, 32($t8)
+	lw $t8, 32($gp)
+	sw $30, 36($t8)
+	lw $t8, 32($gp)
+	sw $30, 40($t8)
+	lw $t8, 32($gp)
+	sw $30, 44($t8)
+	lw $t8, 32($gp)
+	sw $30, 48($t8)
+	lw $t8, 32($gp)
+	sw $30, 52($t8)
+	lw $t8, 32($gp)
+	sw $30, 56($t8)
+	lw $t8, 32($gp)
+	sw $30, 60($t8)
+	lw $t8, 32($gp)
+	sw $30, 64($t8)
+	lw $t8, 32($gp)
+	sw $30, 68($t8)
+	lw $t8, 32($gp)
+	sw $30, 72($t8)
+	lw $t8, 32($gp)
+	sw $30, 76($t8)
+	lw $t8, 32($gp)
+	sw $30, 80($t8)
+	lw $t8, 32($gp)
+	sw $30, 84($t8)
+	lw $t8, 32($gp)
+	sw $30, 88($t8)
+	lw $t8, 32($gp)
+	sw $30, 92($t8)
+	lw $t8, 32($gp)
+	sw $30, 96($t8)
+	lw $t8, 32($gp)
+	sw $30, 100($t8)
+	lw $t8, 32($gp)
+	sw $30, 104($t8)
+	lw $t8, 32($gp)
+	sw $30, 108($t8)
+	lw $t8, 32($gp)
+	sw $30, 112($t8)
+	lw $t8, 32($gp)
+	sw $30, 116($t8)
+	lw $t8, 32($gp)
+	sw $30, 120($t8)
+	lw $t8, 32($gp)
+	sw $30, 124($t8)
+	lw $t8, 32($gp)
+	sw $30, 128($t8)
+	lw $t8, 32($gp)
+	sw $30, 132($t8)
+	lw $t8, 32($gp)
+	sw $30, 136($t8)
+	lw $t8, 32($gp)
+	sw $30, 140($t8)
+	lw $t8, 32($gp)
+	sw $30, 144($t8)
+	lw $t8, 32($gp)
+	sw $30, 148($t8)
+	lw $t8, 32($gp)
+	sw $30, 152($t8)
+	lw $t8, 32($gp)
+	sw $30, 156($t8)
+	lw $t8, 32($gp)
+	sw $30, 160($t8)
+	lw $t8, 32($gp)
+	sw $30, 164($t8)
+	lw $t8, 32($gp)
+	sw $30, 168($t8)
+	lw $t8, 32($gp)
+	sw $30, 172($t8)
+	lw $t8, 32($gp)
+	sw $30, 176($t8)
+	lw $t8, 32($gp)
+	sw $30, 180($t8)
+	lw $t8, 32($gp)
+	sw $30, 184($t8)
+	lw $t8, 32($gp)
+	sw $30, 188($t8)
+	lw $t8, 32($gp)
+	sw $30, 192($t8)
+	lw $t8, 32($gp)
+	sw $30, 196($t8)
+	lw $t8, 32($gp)
+	sw $30, 200($t8)
+	lw $t8, 32($gp)
+	sw $30, 204($t8)
+	lw $t8, 32($gp)
+	sw $30, 208($t8)
+	lw $t8, 32($gp)
+	sw $30, 212($t8)
+	lw $t8, 32($gp)
+	sw $30, 216($t8)
+	lw $t8, 32($gp)
+	sw $30, 220($t8)
+	lw $t8, 32($gp)
+	sw $30, 224($t8)
+	lw $t8, 32($gp)
+	sw $30, 228($t8)
+	lw $t8, 32($gp)
+	sw $30, 232($t8)
+	lw $t8, 32($gp)
+	sw $30, 236($t8)
+	lw $t8, 32($gp)
+	sw $30, 240($t8)
+	lw $t8, 32($gp)
+	sw $30, 244($t8)
+	lw $t8, 32($gp)
+	sw $30, 248($t8)
+	lw $t8, 32($gp)
+	sw $30, 252($t8)
+	lw $t8, 32($gp)
+	sw $30, 256($t8)
+	lw $t8, 32($gp)
+	sw $30, 260($t8)
+	lw $t8, 32($gp)
+	sw $30, 264($t8)
+	lw $t8, 32($gp)
+	sw $30, 268($t8)
+	lw $t8, 32($gp)
+	sw $30, 272($t8)
+	lw $t8, 32($gp)
+	sw $30, 276($t8)
+	lw $t8, 32($gp)
+	sw $30, 280($t8)
+	lw $t8, 32($gp)
+	sw $30, 284($t8)
+	lw $t8, 32($gp)
+	sw $30, 288($t8)
+	lw $t8, 32($gp)
+	sw $30, 292($t8)
+	lw $t8, 32($gp)
+	sw $30, 296($t8)
+	lw $t8, 32($gp)
+	sw $30, 300($t8)
+	lw $t8, 32($gp)
+	sw $30, 304($t8)
+	lw $t8, 32($gp)
+	sw $30, 308($t8)
+	lw $t8, 32($gp)
+	sw $30, 312($t8)
+	lw $t8, 32($gp)
+	sw $30, 316($t8)
+	lw $t8, 32($gp)
+	sw $30, 320($t8)
+	lw $t8, 32($gp)
+	sw $30, 324($t8)
+	lw $t8, 32($gp)
+	sw $30, 328($t8)
+	lw $t8, 32($gp)
+	sw $30, 332($t8)
+	lw $t8, 32($gp)
+	sw $30, 336($t8)
+	lw $t8, 32($gp)
+	sw $30, 340($t8)
+	lw $t8, 32($gp)
+	sw $30, 344($t8)
+	lw $t8, 32($gp)
+	sw $30, 348($t8)
+	lw $t8, 32($gp)
+	sw $30, 352($t8)
+	lw $t8, 32($gp)
+	sw $30, 356($t8)
+	lw $t8, 32($gp)
+	sw $30, 360($t8)
+	lw $t8, 32($gp)
+	sw $30, 364($t8)
+	lw $t8, 32($gp)
+	sw $30, 368($t8)
+	lw $t8, 32($gp)
+	sw $30, 372($t8)
+	lw $t8, 32($gp)
+	sw $30, 376($t8)
+	lw $t8, 32($gp)
+	sw $30, 380($t8)
+	lw $t8, 32($gp)
+	sw $30, 384($t8)
+	lw $t8, 32($gp)
+	sw $30, 388($t8)
+	lw $t8, 32($gp)
+	sw $30, 392($t8)
+	lw $t8, 32($gp)
+	sw $30, 396($t8)
 	#assign
 	li $30, 10
-	move $18, $30
-	#assign
-	li $30, 11
-	move $15, $30
-	#assign
-	li $30, 12
-	move $17, $30
-	#assign
-	li $30, 13
-	move $16, $30
-	#assign
-	li $30, 14
-	move $12, $30
-	#assign
-	li $30, 15
-	move $11, $30
-	#assign
-	li $30, 16
-	move $14, $30
-	#assign
-	li $30, 17
-	move $13, $30
-	#assign
-	li $30, 18
-	move $9, $30
-	#assign
-	li $30, 19
-	move $8, $30
-	#assign
-	li $30, 20
-	move $10, $30
-	#assign
-	li $30, 21
-	sw $30, 8($gp)
-	#assign
-	li $30, 22
-	sw $30, 12($gp)
-	#assign
-	li $30, 23
-	sw $30, 0($gp)
-	#assign
-	li $30, 24
-	sw $30, 4($gp)
-	#assign
-	li $30, 25
-	sw $30, 16($gp)
-	#assign
-	li $30, 26
-	sw $30, 20($gp)
-create_array_main:
+	sw $30, 36($gp)
 	#callr
-	addi $sp, $sp, -4
-	sw $a0, ($sp)
-	addi $sp, $sp, -4
-	sw $a1, ($sp)
-	addi $sp, $sp, -4
-	sw $a2, ($sp)
-	addi $sp, $sp, -4
-	sw $a3, ($sp)
-	addi $sp, $sp, -4
-	sw $8, ($sp)
-	addi $sp, $sp, -4
-	sw $9, ($sp)
-	addi $sp, $sp, -4
-	sw $10, ($sp)
-	addi $sp, $sp, -4
-	sw $11, ($sp)
-	addi $sp, $sp, -4
-	sw $12, ($sp)
-	addi $sp, $sp, -4
-	sw $13, ($sp)
-	addi $sp, $sp, -4
-	sw $14, ($sp)
-	addi $sp, $sp, -4
-	sw $15, ($sp)
-	addi $sp, $sp, -4
-	sw $16, ($sp)
-	addi $sp, $sp, -4
-	sw $17, ($sp)
-	addi $sp, $sp, -4
-	sw $18, ($sp)
-	addi $sp, $sp, -4
-	sw $19, ($sp)
-	addi $sp, $sp, -4
-	sw $20, ($sp)
-	addi $sp, $sp, -4
-	sw $21, ($sp)
-	addi $sp, $sp, -4
-	sw $22, ($sp)
-	addi $sp, $sp, -4
-	sw $23, ($sp)
-	addi $sp, $sp, -4
-	sw $29, ($sp)
-	addi $sp, $sp, -4
-	sw $ra, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 20($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 16($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 4($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
+	#geti
+	li $v0, 5
+	syscall
+	sw $v0, 56($gp)
+	#assign
+	li $30, 0
+	sw $30, 0($gp)
+L0_main:
+	#branch
 	lw $t8, 0($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 12($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 8($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	sw $10, ($sp)
-	addi $sp, $sp, -4
-	sw $8, ($sp)
-	addi $sp, $sp, -4
-	sw $9, ($sp)
-	addi $sp, $sp, -4
-	sw $13, ($sp)
-	addi $sp, $sp, -4
-	sw $14, ($sp)
-	addi $sp, $sp, -4
-	sw $11, ($sp)
-	addi $sp, $sp, -4
-	sw $12, ($sp)
-	addi $sp, $sp, -4
-	sw $16, ($sp)
-	addi $sp, $sp, -4
-	sw $17, ($sp)
-	addi $sp, $sp, -4
-	sw $15, ($sp)
-	addi $sp, $sp, -4
-	sw $18, ($sp)
-	addi $sp, $sp, -4
-	sw $19, ($sp)
-	addi $sp, $sp, -4
-	sw $20, ($sp)
-	addi $sp, $sp, -4
-	sw $21, ($sp)
-	addi $sp, $sp, -4
-	sw $22, ($sp)
-	addi $sp, $sp, -4
-	sw $23, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 36($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 32($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 28($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
+	lw $t9, 56($gp)
+	bge $t8, $t9, EOI_main
+	#callr
+	#geti
+	li $v0, 5
+	syscall
+	sw $v0, 4($gp)
+	#array_store
+	li $30, 4
+	lw $t8, 0($gp)
+	mul $30, $t8, $30
 	lw $t8, 24($gp)
-	sw $t8, ($sp)
-	jal sampleFunc
-	move $30, $v0
-	lw $ra, ($sp)
-	addi $sp, $sp, 4
-	lw $29, ($sp)
-	addi $sp, $sp, 4
-	lw $23, ($sp)
-	addi $sp, $sp, 4
-	lw $22, ($sp)
-	addi $sp, $sp, 4
-	lw $21, ($sp)
-	addi $sp, $sp, 4
-	lw $20, ($sp)
-	addi $sp, $sp, 4
-	lw $19, ($sp)
-	addi $sp, $sp, 4
-	lw $18, ($sp)
-	addi $sp, $sp, 4
-	lw $17, ($sp)
-	addi $sp, $sp, 4
-	lw $16, ($sp)
-	addi $sp, $sp, 4
-	lw $15, ($sp)
-	addi $sp, $sp, 4
-	lw $14, ($sp)
-	addi $sp, $sp, 4
-	lw $13, ($sp)
-	addi $sp, $sp, 4
-	lw $12, ($sp)
-	addi $sp, $sp, 4
-	lw $11, ($sp)
-	addi $sp, $sp, 4
-	lw $10, ($sp)
-	addi $sp, $sp, 4
-	lw $9, ($sp)
-	addi $sp, $sp, 4
-	lw $8, ($sp)
-	addi $sp, $sp, 4
-	lw $a3, ($sp)
-	addi $sp, $sp, 4
-	lw $a2, ($sp)
-	addi $sp, $sp, 4
-	lw $a1, ($sp)
-	addi $sp, $sp, 4
-	lw $a0, ($sp)
-	addi $sp, $sp, 4
-	move $8, $30
+	add $30, $t8, $30
+	lw $t8, 4($gp)
+	sw $t8, 0($30)
+	#assign
+	li $30, 0
+	sw $30, 8($gp)
+L1_main:
+	#branch
+	lw $t8, 8($gp)
+	lw $t9, 4($gp)
+	bge $t8, $t9, L2_main
+	#callr
+	#geti
+	li $v0, 5
+	syscall
+	sw $v0, 12($gp)
+	#mult
+	lw $t8, 36($gp)
+	lw $t9, 0($gp)
+	mul $t8, $t8, $t9
+	sw $t8, 16($gp)
+	#add
+	lw $t8, 16($gp)
+	lw $t9, 8($gp)
+	add $t8, $t8, $t9
+	sw $t8, 16($gp)
+	#array_store
+	li $30, 4
+	lw $t8, 16($gp)
+	mul $30, $t8, $30
+	lw $t8, 20($gp)
+	add $30, $t8, $30
+	lw $t8, 12($gp)
+	sw $t8, 0($30)
+	#add
+	lw $t9, 8($gp)
+	addi $t9, $t9, 1
+	sw $t9, 8($gp)
+	#goto
+	j L1_main
+L2_main:
+	#add
+	lw $t9, 0($gp)
+	addi $t9, $t9, 1
+	sw $t9, 0($gp)
+	#goto
+	j L0_main
+EOI_main:
+	#array_store
+	li $30, 1
+	lw $t8, 32($gp)
+	sw $30, 0($t8)
+	#array_store
+	li $30, 0
+	lw $t8, 28($gp)
+	sw $30, 0($t8)
+	#assign
+	li $30, 0
+	sw $30, 40($gp)
+	#assign
+	lw $t9, 40($gp)
+	sw $t9, 0($gp)
+	#assign
+	li $30, 1
+	sw $30, 8($gp)
+L3_main:
+	#branch
+	lw $t8, 0($gp)
+	lw $t9, 8($gp)
+	beq $t8, $t9, FIN_main
+	#array_load
+	li $30, 4
+	lw $t8, 0($gp)
+	mul $30, $30, $t8
+	lw $t8, 28($gp)
+	add $30, $t8, $30
+	lw $t8, 0($30)
+	sw $t8, 44($gp)
+	#add
+	lw $t9, 0($gp)
+	addi $t8, $t9, 1
+	sw $t9, 40($gp)
+	#assign
+	lw $t9, 40($gp)
+	sw $t9, 0($gp)
+	#array_load
+	li $30, 4
+	lw $t8, 44($gp)
+	mul $30, $30, $t8
+	lw $t8, 24($gp)
+	add $30, $t8, $30
+	lw $t8, 0($30)
+	sw $t8, 4($gp)
+	#assign
+	li $30, 0
+	sw $30, 48($gp)
+L4_main:
+	#branch
+	lw $t8, 48($gp)
+	lw $t9, 4($gp)
+	bge $t8, $t9, L5_main
+	#mult
+	lw $t8, 36($gp)
+	lw $t9, 44($gp)
+	mul $t8, $t8, $t9
+	sw $t8, 16($gp)
+	#add
+	lw $t8, 16($gp)
+	lw $t9, 48($gp)
+	add $t8, $t8, $t9
+	sw $t8, 16($gp)
+	#array_load
+	li $30, 4
+	lw $t8, 16($gp)
+	mul $30, $30, $t8
+	lw $t8, 20($gp)
+	add $30, $t8, $30
+	lw $t8, 0($30)
+	sw $t8, 12($gp)
+	#array_load
+	li $30, 4
+	lw $t8, 12($gp)
+	mul $30, $30, $t8
+	lw $t8, 32($gp)
+	add $30, $t8, $30
+	lw $t8, 0($30)
+	sw $t8, 52($gp)
+	#branch
+	li $30, 1
+	lw $t8, 52($gp)
+	beq $t8, $30, L6_main
+	#array_store
+	li $v1, 1
+	li $30, 4
+	lw $t8, 12($gp)
+	mul $30, $t8, $30
+	lw $t8, 32($gp)
+	add $30, $t8, $30
+	sw $v1, 0($30)
+	#array_store
+	li $30, 4
+	lw $t8, 8($gp)
+	mul $30, $t8, $30
+	lw $t8, 28($gp)
+	add $30, $t8, $30
+	lw $t8, 12($gp)
+	sw $t8, 0($30)
+	#add
+	lw $t9, 8($gp)
+	addi $t9, $t9, 1
+	sw $t9, 8($gp)
+L6_main:
+	#add
+	lw $t9, 48($gp)
+	addi $t9, $t9, 1
+	sw $t9, 48($gp)
+	#goto
+	j L4_main
+L5_main:
+	#goto
+	j L3_main
+FIN_main:
+	#assign
+	li $30, 0
+	sw $30, 40($gp)
+	#assign
+	lw $t9, 40($gp)
+	sw $t9, 0($gp)
+L7_main:
+	#branch
+	lw $t8, 0($gp)
+	lw $t9, 8($gp)
+	beq $t8, $t9, L8_main
+	#array_load
+	li $30, 4
+	lw $t8, 0($gp)
+	mul $30, $30, $t8
+	lw $t8, 28($gp)
+	add $30, $t8, $30
+	lw $t8, 0($30)
+	sw $t8, 12($gp)
 	#call
 	#puti
 	move $30, $a0
-	move $a0, $8
+	lw $a0, 12($gp)
 	li $v0, 1
 	syscall
 	move $a0, $30
@@ -274,547 +475,17 @@ create_array_main:
 	li $a0, 10
 	syscall
 	move $a0, $30
+	#add
+	lw $t9, 0($gp)
+	addi $t8, $t9, 1
+	sw $t9, 40($gp)
+	#assign
+	lw $t9, 40($gp)
+	sw $t9, 0($gp)
+	#goto
+	j L7_main
+L8_main:
 	jr $ra
 	li $v0, 10
 	syscall
-sampleFunc2:
-	li $v0, 9
-	li $a0, 32
-	syscall
-	move $gp, $v0
-	lw $a0, ($sp)
-	addi $sp, $sp, 4
-	lw $a1, ($sp)
-	addi $sp, $sp, 4
-	lw $a2, ($sp)
-	addi $sp, $sp, 4
-	lw $a3, ($sp)
-	addi $sp, $sp, 4
-	lw $13, ($sp)
-	addi $sp, $sp, 4
-	lw $12, ($sp)
-	addi $sp, $sp, 4
-	lw $11, ($sp)
-	addi $sp, $sp, 4
-	lw $10, ($sp)
-	addi $sp, $sp, 4
-	lw $9, ($sp)
-	addi $sp, $sp, 4
-	lw $8, ($sp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 0($gp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 4($gp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 8($gp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 12($gp)
-	addi $sp, $sp, 4
-	lw $22, ($sp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 16($gp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 24($gp)
-	addi $sp, $sp, 4
-	lw $18, ($sp)
-	addi $sp, $sp, 4
-	lw $17, ($sp)
-	addi $sp, $sp, 4
-	lw $20, ($sp)
-	addi $sp, $sp, 4
-	lw $19, ($sp)
-	addi $sp, $sp, 4
-	lw $15, ($sp)
-	addi $sp, $sp, 4
-	lw $14, ($sp)
-	addi $sp, $sp, 4
-	lw $16, ($sp)
-	addi $sp, $sp, 4
-	lw $23, ($sp)
-	addi $sp, $sp, 4
-	lw $21, ($sp)
-	addi $sp, $sp, 4
-	#assign
-	li $30, 0
-	sw $30, 20($gp)
-	#assign
-	li $30, 1
-	sw $30, 28($gp)
-loop_sampleFunc2:
-	#branch
-	li $30, 0
-	lw $t8, 28($gp)
-	beq $t8, $30, end_sampleFunc2
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $a0
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $a1
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $a2
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $a3
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $13
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $12
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $11
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $10
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $9
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $8
-	sw $t9, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 0($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 4($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 8($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 12($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $22
-	sw $t9, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 16($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 24($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $18
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $17
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $20
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $19
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $15
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $14
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $16
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $23
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $21
-	sw $t9, 20($gp)
-end_sampleFunc2:
-	#return
-	lw $t8, 20($gp)
-	jr $ra
-	move $v0, $t8
-sampleFunc:
-	li $v0, 9
-	li $a0, 32
-	syscall
-	move $gp, $v0
-	lw $a0, ($sp)
-	addi $sp, $sp, 4
-	lw $a1, ($sp)
-	addi $sp, $sp, 4
-	lw $a2, ($sp)
-	addi $sp, $sp, 4
-	lw $a3, ($sp)
-	addi $sp, $sp, 4
-	lw $13, ($sp)
-	addi $sp, $sp, 4
-	lw $12, ($sp)
-	addi $sp, $sp, 4
-	lw $11, ($sp)
-	addi $sp, $sp, 4
-	lw $10, ($sp)
-	addi $sp, $sp, 4
-	lw $9, ($sp)
-	addi $sp, $sp, 4
-	lw $8, ($sp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 0($gp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 4($gp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 8($gp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 12($gp)
-	addi $sp, $sp, 4
-	lw $22, ($sp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 16($gp)
-	addi $sp, $sp, 4
-	lw $t8, ($sp)
-	sw $t8, 24($gp)
-	addi $sp, $sp, 4
-	lw $18, ($sp)
-	addi $sp, $sp, 4
-	lw $17, ($sp)
-	addi $sp, $sp, 4
-	lw $20, ($sp)
-	addi $sp, $sp, 4
-	lw $19, ($sp)
-	addi $sp, $sp, 4
-	lw $15, ($sp)
-	addi $sp, $sp, 4
-	lw $14, ($sp)
-	addi $sp, $sp, 4
-	lw $16, ($sp)
-	addi $sp, $sp, 4
-	lw $23, ($sp)
-	addi $sp, $sp, 4
-	lw $21, ($sp)
-	addi $sp, $sp, 4
-	#assign
-	li $30, 0
-	sw $30, 20($gp)
-	#callr
-	#geti
-	li $v0, 5
-	syscall
-	sw $v0, 28($gp)
-loop_sampleFunc:
-	#branch
-	li $30, 0
-	lw $t8, 28($gp)
-	beq $t8, $30, end_sampleFunc
-	#sub
-	lw $t9, 28($gp)
-	addi $t9, $t9, -1
-	sw $t9, 28($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $a0
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $a1
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $a2
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $a3
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $13
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $12
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $11
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $10
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $9
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $8
-	sw $t9, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 0($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 4($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 8($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 12($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $22
-	sw $t9, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 16($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 24($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $18
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $17
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $20
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $19
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $15
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $14
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $16
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $23
-	sw $t9, 20($gp)
-	#add
-	lw $t9, 20($gp)
-	add $t9, $t9, $21
-	sw $t9, 20($gp)
-	#goto
-	j loop_sampleFunc
-end_sampleFunc:
-	#callr
-	addi $sp, $sp, -4
-	sw $a0, ($sp)
-	addi $sp, $sp, -4
-	sw $a1, ($sp)
-	addi $sp, $sp, -4
-	sw $a2, ($sp)
-	addi $sp, $sp, -4
-	sw $a3, ($sp)
-	addi $sp, $sp, -4
-	sw $8, ($sp)
-	addi $sp, $sp, -4
-	sw $9, ($sp)
-	addi $sp, $sp, -4
-	sw $10, ($sp)
-	addi $sp, $sp, -4
-	sw $11, ($sp)
-	addi $sp, $sp, -4
-	sw $12, ($sp)
-	addi $sp, $sp, -4
-	sw $13, ($sp)
-	addi $sp, $sp, -4
-	sw $14, ($sp)
-	addi $sp, $sp, -4
-	sw $15, ($sp)
-	addi $sp, $sp, -4
-	sw $16, ($sp)
-	addi $sp, $sp, -4
-	sw $17, ($sp)
-	addi $sp, $sp, -4
-	sw $18, ($sp)
-	addi $sp, $sp, -4
-	sw $19, ($sp)
-	addi $sp, $sp, -4
-	sw $20, ($sp)
-	addi $sp, $sp, -4
-	sw $21, ($sp)
-	addi $sp, $sp, -4
-	sw $22, ($sp)
-	addi $sp, $sp, -4
-	sw $23, ($sp)
-	addi $sp, $sp, -4
-	sw $29, ($sp)
-	addi $sp, $sp, -4
-	sw $ra, ($sp)
-	addi $sp, $sp, -4
-	sw $21, ($sp)
-	addi $sp, $sp, -4
-	sw $23, ($sp)
-	addi $sp, $sp, -4
-	sw $16, ($sp)
-	addi $sp, $sp, -4
-	sw $14, ($sp)
-	addi $sp, $sp, -4
-	sw $15, ($sp)
-	addi $sp, $sp, -4
-	sw $19, ($sp)
-	addi $sp, $sp, -4
-	sw $20, ($sp)
-	addi $sp, $sp, -4
-	sw $17, ($sp)
-	addi $sp, $sp, -4
-	sw $18, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 24($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 16($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	sw $22, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 12($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 8($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 4($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	lw $t8, 0($gp)
-	sw $t8, ($sp)
-	addi $sp, $sp, -4
-	sw $8, ($sp)
-	addi $sp, $sp, -4
-	sw $9, ($sp)
-	addi $sp, $sp, -4
-	sw $10, ($sp)
-	addi $sp, $sp, -4
-	sw $11, ($sp)
-	addi $sp, $sp, -4
-	sw $12, ($sp)
-	addi $sp, $sp, -4
-	sw $13, ($sp)
-	addi $sp, $sp, -4
-	sw $a3, ($sp)
-	addi $sp, $sp, -4
-	sw $a2, ($sp)
-	addi $sp, $sp, -4
-	sw $a1, ($sp)
-	addi $sp, $sp, -4
-	sw $a0, ($sp)
-	jal sampleFunc2
-	move $30, $v0
-	lw $ra, ($sp)
-	addi $sp, $sp, 4
-	lw $29, ($sp)
-	addi $sp, $sp, 4
-	lw $23, ($sp)
-	addi $sp, $sp, 4
-	lw $22, ($sp)
-	addi $sp, $sp, 4
-	lw $21, ($sp)
-	addi $sp, $sp, 4
-	lw $20, ($sp)
-	addi $sp, $sp, 4
-	lw $19, ($sp)
-	addi $sp, $sp, 4
-	lw $18, ($sp)
-	addi $sp, $sp, 4
-	lw $17, ($sp)
-	addi $sp, $sp, 4
-	lw $16, ($sp)
-	addi $sp, $sp, 4
-	lw $15, ($sp)
-	addi $sp, $sp, 4
-	lw $14, ($sp)
-	addi $sp, $sp, 4
-	lw $13, ($sp)
-	addi $sp, $sp, 4
-	lw $12, ($sp)
-	addi $sp, $sp, 4
-	lw $11, ($sp)
-	addi $sp, $sp, 4
-	lw $10, ($sp)
-	addi $sp, $sp, 4
-	lw $9, ($sp)
-	addi $sp, $sp, 4
-	lw $8, ($sp)
-	addi $sp, $sp, 4
-	lw $a3, ($sp)
-	addi $sp, $sp, 4
-	lw $a2, ($sp)
-	addi $sp, $sp, 4
-	lw $a1, ($sp)
-	addi $sp, $sp, 4
-	lw $a0, ($sp)
-	addi $sp, $sp, 4
-	sw $30, 28($gp)
-	#add
-	lw $t8, 20($gp)
-	lw $t9, 28($gp)
-	add $t8, $t8, $t9
-	sw $t8, 20($gp)
-	#return
-	lw $t8, 20($gp)
-	jr $ra
-	move $v0, $t8
+	move $a0, $t8

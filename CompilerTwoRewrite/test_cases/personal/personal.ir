@@ -80,6 +80,7 @@ float-list:
 	assign, temp, 0
 	callr, count, geti
 loop:
+	call, puti, count
 	breq, end, count, 0
 	sub, count, count, 1
 	add, temp, temp, a
