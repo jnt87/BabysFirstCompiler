@@ -19,7 +19,7 @@ float-list: fval, t1, t2, t3, t4
 float fprime(float x, float a, float b, float c):
 int-list:
 float-list: fprimeval, t1, t2, t3
-    mult, t1, 2.0, x
+    mult, t1, x, 2.0
     mult, t1, t1, a
     assign, t2, b
     add, t3, t1, t2

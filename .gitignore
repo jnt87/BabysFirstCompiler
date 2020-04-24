@@ -1,9 +1,13 @@
 target/
 bin/
+build/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### Compiled Files ###
 *.class
+
+### Unecessary Files###
+sources.txt
 
 ### STS ###
 .apt_generated
