@@ -90,16 +90,20 @@ public class InstructionSelection {
                         result = sub(instruc);
                         break;
                     case MULT:
-                        result = mult(instruc);
+                        // result = mult(instruc);
+                        result = binary_op(instruc, "mul");
                         break;
                     case DIV:
-                        result = div(instruc);
+                        // result = div(instruc);
+                        result = binary_op(instruc, "div");
                         break;
                     case AND:
-                        result = and(instruc);
+                        // result = and(instruc);
+                        result = binary_op(instruc, "and");
                         break;
                     case OR:
-                        result = or(instruc);
+                        // result = or(instruc);
+                        result = binary_op(instruc, "or");
                         break;
                     case GOTO:
                         result = goto_op(instruc);
@@ -251,103 +255,28 @@ public class InstructionSelection {
         }
     }
     
-    public static String mult(IRInstruction instruction) {
-        String line = "\t#mult\n";
-        IROperand[] operands = instruction.operands;
-        if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-            String storeTo = getRegisterVar(operands[0].toString());
-            String add1 = getRegisterVar(operands[1].toString());
-            String add2 = getRegisterVar(operands[2].toString());
-            line += String.format("\tmul %s, %s, %s\n", storeTo, add1, add2);
-            return line;
-        } else if (!checkImmediate(operands[1].toString()) && checkImmediate(operands[2].toString())) {
-            String storeTo = getRegisterVar(operands[0].toString());
-            String add1 = getRegisterVar(operands[1].toString());
-            line += String.format("\tli $30, %s\n", operands[2].toString());
-            line += String.format("\tmul %s, %s, %s\n", storeTo, add1, "$30");
-            return line;
-        } else if (checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-            String storeTo = getRegisterVar(operands[0].toString());
-            String add2 = getRegisterVar(operands[2].toString());
-            line += String.format("\tli $30, %s\n", operands[1].toString());
-            line += String.format("\tmul %s, %s, %s\n", storeTo, "$30", add2);
-            return line;
-        } else {
-            return "\twelp, oh well\n";
-        }
-    }
-
-    public static String div(IRInstruction instruction) {
-        String line = "\t#div\n";
-        IROperand[] operands = instruction.operands;
-        if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-            String storeTo = getRegisterVar(operands[0].toString());
-            String add1 = getRegisterVar(operands[1].toString());
-            String add2 = getRegisterVar(operands[2].toString());
-            line += String.format("\tdiv %s, %s, %s\n", storeTo, add1, add2);
-            return line;
-        } else if (!checkImmediate(operands[1].toString()) && checkImmediate(operands[2].toString())) {
-            String storeTo = getRegisterVar(operands[0].toString());
-            String add1 = getRegisterVar(operands[1].toString());
-            line += String.format("\tli $30, %s\n", operands[2].toString());
-            line += String.format("\tdiv %s, %s, %s\n", storeTo, add1, "$30");
-            return line;
-        } else if (checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-            String storeTo = getRegisterVar(operands[0].toString());
-            String add2 = getRegisterVar(operands[2].toString());
-            line += String.format("\tli $30, %s\n", operands[1].toString());
-            line += String.format("\tdiv %s, %s, %s\n", storeTo, "$30", add2);
-            return line;
-        } else {
-            return "\twelp, oh well\n";
-        }
-    }
-
-    public static String and(IRInstruction instruction) {
-        String line = "\t#and\n";
-        IROperand[] operands = instruction.operands;
-        String storeTo = getRegisterVar(operands[0].toString());
-        if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-            String add1 = getRegisterVar(operands[1].toString());
-            String add2 = getRegisterVar(operands[2].toString());
-            line += String.format("\tand %s, %s, %s\n", storeTo, add1, add2);
-            return line;
-        } else if (!checkImmediate(operands[1].toString()) && checkImmediate(operands[2].toString())) {
-            String add1 = getRegisterVar(operands[1].toString());
-            line += String.format("\tli $30, %s\n", operands[2].toString());
-            line += String.format("\tand %s, %s, %s\n", storeTo, add1, "$30");
-            return line;
-        } else if (checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
-            String add2 = getRegisterVar(operands[2].toString());
-            line += String.format("\tli $30, %s\n", operands[1].toString());
-            line += String.format("\tand %s, %s, %s\n", storeTo, "$30", add2);
-            return line;
-        } else {
-            return String.format("\tand %s, %s, %s\n", storeTo, operands[1].toString(), operands[2].toString());
-        }
-    }
-
-    public static String or(IRInstruction instruction) {
+    // All binary op except for addition and subtraction
+    public static String binary_op(IRInstruction instruction, String op) {
         String line = "\t#or\n";
         IROperand[] operands = instruction.operands;
         String storeTo = getRegisterVar(operands[0].toString());
         if (!checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
             String add1 = getRegisterVar(operands[1].toString());
             String add2 = getRegisterVar(operands[2].toString());
-            line += String.format("\tor %s, %s, %s\n", storeTo, add1, add2);
+            line += String.format("\t%s %s, %s, %s\n", op, storeTo, add1, add2);
             return line;
         } else if (!checkImmediate(operands[1].toString()) && checkImmediate(operands[2].toString())) {
             String add1 = getRegisterVar(operands[1].toString());
             line += String.format("\tli $30, %s\n", operands[2].toString());
-            line += String.format("\tor %s, %s, %s\n", storeTo, add1, "$30");
+            line += String.format("\t%s %s, %s, %s\n", op, storeTo, add1, "$30");
             return line;
         } else if (checkImmediate(operands[1].toString()) && !checkImmediate(operands[2].toString())) {
             String add2 = getRegisterVar(operands[2].toString());
             line += String.format("\tli $30, %s\n", operands[1].toString());
-            line += String.format("\tor %s, %s, %s\n", storeTo, "$30", add2);
+            line += String.format("\t%s %s, %s, %s\n", op, storeTo, "$30", add2);
             return line;
         } else {
-            return String.format("\tor %s, %s, %s\n", storeTo, operands[1].toString(), operands[2].toString());
+            return String.format("\t%s %s, %s, %s\n", op, storeTo, operands[1].toString(), operands[2].toString());
         }
     }
 
