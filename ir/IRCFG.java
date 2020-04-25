@@ -117,8 +117,6 @@ public class IRCFG extends GraphStructure {
 			
 			//For merging the nodes after creating them
 			for (IRNode node : nodes) {
-				//System.out.println(node.getLastInstruction().opCode);
-				//System.out.println("Last Instruction: "+ node.instructions.get(node.instructions.size()-1));
 				switch(node.instructions.get(node.instructions.size()-1).opCode) {
 					case GOTO:
 						IROperand nextBlockLabel = node.instructions.get(node.instructions.size()-1).operands[0];
@@ -225,11 +223,6 @@ public class IRCFG extends GraphStructure {
         
         ArrayList<IRNode> paths = new ArrayList<>();
         generatePaths(root, new IRNode(), paths);
-        // for (IRNode path_node : paths) {
-        //     System.out.println("-----------------DISPLAYING PATH----------------");
-        //     displayNode(path_node, visited);
-        //     System.out.println("---------------- DISPLAY EBB FINISHED --------------------");
-        // }
         
         return paths;
     }
@@ -240,8 +233,6 @@ public class IRCFG extends GraphStructure {
         curr.edgeList.clear();
         for (IRNode child : edgeList) {
             if (child.parentNode.size() < 2) {
-                // System.out.println(child.parentNode.size());
-                // System.out.println(child.instructions);
                 curr.edgeList.add(child);
                 EBBHelper(child, visited);
             }
@@ -267,7 +258,6 @@ public class IRCFG extends GraphStructure {
     private void displayNode(IRNode curr, ArrayList<IRNode> visited) {
         if (!visited.contains(curr)) {
             visited.add(curr);
-            System.out.println(curr);
             for (IRNode child : curr.edgeList) {
                 displayNode(child, visited);
             }

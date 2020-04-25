@@ -49,12 +49,6 @@ public class Compiler {
                 cp.cpHelper(root,irCfg);
             }
 
-            for (IRFunction func : program.functions) {
-                for (IRInstruction ins : func.instructions) {
-                    System.out.println(ins);
-                }
-            }
-
             filePrinter.printProgram(program);
             IRProgram program2 = irReader.parseIRFile(Optimized_IRFile);
             filePrinter = new IRPrinter(new PrintStream(Optimized_IRFile));

@@ -77,7 +77,6 @@ public class DeadCode {
                 IRNode container = findNodeContaining(instruction, root, new HashSet<IRNode>());
 
                 if (container == null) {
-                    System.out.println(instruction);
                     throw new IllegalArgumentException("Container is null");    // this should never happen
                 }
 
@@ -93,7 +92,6 @@ public class DeadCode {
                     }
                 }                
             }
-            //System.out.println("Complete One Function");
         }
 
         for (IRNode root : rootList) {

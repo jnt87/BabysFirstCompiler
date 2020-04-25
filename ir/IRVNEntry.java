@@ -19,7 +19,4 @@ public class IRVNEntry {
 	public String toString() {
 		return "Entry: "+this.variable+" -> "+this.hashValue;
 	}
-	
-	
-	
 }

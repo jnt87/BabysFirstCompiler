@@ -22,19 +22,16 @@ public class IRRedundancyElimination {
 	}
 	
 	public void SVN(IRNode node) {
-		System.out.println("Entering SVN...");
+        this.vn = new ArrayList<>();
 		for (IRInstruction instruction: node.instructions) {
-//			System.out.println(instruction.toString());
 			if (instruction.opCode.equals(instruction.opCode.ASSIGN)) {
 				if (inTableVariable(instruction.operands[1].toString())<0) {
 					IRVNEntry entry1 = new IRVNEntry(instruction.operands[1].toString(),lastHashUsed);
 					IRVNEntry entry2 = new IRVNEntry(instruction.operands[0].toString(),lastHashUsed);
 					vn.add(entry1);
 					vn.add(entry2);
-//					System.out.println(entry1.toString());
-//					System.out.println(entry2.toString());
 					lastHashUsed++;
-				}else {
+				} else {
 					IRVNEntry entry2 = new IRVNEntry(instruction.operands[0].toString(),inTableVariable(instruction.operands[1].toString()));
 					vn.add(entry2);
 				}
@@ -75,7 +72,6 @@ public class IRRedundancyElimination {
 				
 				//Create hash with <operator,leftOperand,rightOperand>
 				double hash = CPH3(operator,leftOperandVN,rightOperandVN);
-//				System.out.println("HASH: "+hash);
 				
 				//Look for hash in table
 				String substitute = inTableHash(hash);
@@ -87,14 +83,11 @@ public class IRRedundancyElimination {
 					
 					instruction.opCode = instruction.opCode.ASSIGN;
 					instruction.operands = newOperands;
-					
-					//System.out.println("New instruction would be: assign, "+ instruction.operands[0].toString()+", "+substitute);
-				}else {
+				} else {
 					if (inTableVariable(leftPart)>=0) {
 						changeVN(leftPart,hash,instruction);
-					}else {
+					} else {
 						IRVNEntry entry = new IRVNEntry(leftPart,hash,instruction);
-//						System.out.println("changed: "+entry.toString());
 						vn.add(entry);
 					}
 				}

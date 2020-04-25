@@ -55,14 +55,16 @@ public class IRNode {
         ArrayList<IRInstruction> singleton = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
         	if (list.get(i).opCode.equals(IRInstruction.OpCode.ASSIGN)) {
-        		boolean duplicate = false;
+                boolean duplicate = false;
                 for (int j = 0; j < list.size(); j++) {
                     if ((list.get(i) != list.get(j) && list.get(i).operands[0].getValue().equals(list.get(j).operands[0].getValue()))) { //||
                         //Arrays.asList(DeadCode.assignOps).contains(list.get(j).opCode)) {
-                    	if (list.get(i).operands[1].getValue()!=list.get(j).operands[1].getValue()) {
-                    		duplicate = true;
-                    	}  
-                    } 
+                        if (!(list.get(i).operands.length <= 1 || list.get(j).operands.length <= 1)) {
+                            if (list.get(i).operands[1].getValue()!=list.get(j).operands[1].getValue()) {
+                                duplicate = true;
+                            }  
+                        }
+                    }
                 }
                 if (!duplicate) {
                     singleton.add(list.get(i));

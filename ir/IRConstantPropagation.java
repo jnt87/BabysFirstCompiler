@@ -16,40 +16,28 @@ public class IRConstantPropagation {
 		for (IRInstruction instruction : node.instructions) {
 			if (instruction.opCode.equals(instruction.opCode.ASSIGN)) {
 				instruction.operands[1] = replace(instruction.operands[1],copyTable);
-				//System.out.println("Change");
 			}else if(convertOperator(instruction.opCode)){
 				instruction.operands[1] = replace(instruction.operands[1],copyTable);
 				instruction.operands[2] = replace(instruction.operands[2],copyTable);
-				//System.out.println("Change");
 			}
 			if (instruction.opCode.equals(instruction.opCode.ASSIGN) || convertOperator(instruction.opCode)) {
 				copyTable = remove(instruction.operands[0],copyTable);
-				//System.out.println("Remove");
 			}
-			//System.out.println(instruction.opCode+" vs "+instruction.opCode.ASSIGN);
 			if (instruction.opCode.equals(instruction.opCode.ASSIGN)) {
 				IRCPEntry insertion = new IRCPEntry(instruction.operands[0],instruction.operands[1]);
 				copyTable.add(insertion);
-				//System.out.println("Insert");
 			}
 		}
 	}
 	
 	public void cpHelper(IRNode root,IRCFG cfg) {
 		if (!this.visited.contains(root)) {
-			System.out.println("Entering cp...");
 			HashSet<IRInstruction> singletonHashSet = root.generateSingleton(false);
 			ArrayList<IRInstruction> singletonInstructions = new ArrayList<IRInstruction>(singletonHashSet);
 			this.visited.add(root);
-			System.out.println("Without singleton: "+root.instructions);
-			System.out.println("IN set: "+root.IN);
-			System.out.println("Singleton: "+singletonHashSet);
 			root.instructions.addAll(0,singletonInstructions);
-			System.out.println("With singleton: "+root.instructions);
-			//for (IRNode path : cfg.EBBFinder(root)) {
 			cp(root);
 			root.instructions.removeAll(singletonInstructions);
-			//}
 			if (root.edgeList.size()>0) {
 				for (IRNode child: root.edgeList) {
 					cpHelper(child,cfg);
