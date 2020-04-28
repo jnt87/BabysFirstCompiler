@@ -1,117 +1,66 @@
 #start_function
 void main():
-int-list: a, b, temp, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
+int-list: ii, tv, temp, c, e[1000], en[100], i, j, k, m, n, p, q[100], t, v[100], now, x, t0, t1
 float-list: 
-    assign, a, 1
-    assign, b, 2
-    assign, c, 3
-    assign, d, 4
-    assign, e, 5
-    assign, f, 6
-    assign, g, 7
-    assign, h, 8
-    assign, i, 9
-    assign, j, 10
-    assign, k, 11
-    assign, l, 12
-    assign, m, 13
-    assign, n, 14
-    assign, o, 15
-    assign, p, 16
-    assign, q, 17
-    assign, r, 18
-    assign, s, 19
-    assign, t, 20
-    assign, u, 21
-    assign, v, 22
-    assign, w, 23
-    assign, x, 24
-    assign, y, 25
-    assign, z, 26
-create_array:
-    callr, temp, sampleFunc, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
-    call, puti, temp
+    assign, v, 100, 0
+    assign, m, 10
+    callr, n, geti
+    assign, i, 0
+L0:
+    brgeq, EOI, i, n
+    callr, c, geti
+    array_store, c, en, i
+    assign, j, 0
+L1:
+    brgeq, L2, j, c
+    callr, x, geti
+    mult, t, m, i
+    add, t, t, j
+    array_store, x, e, t
+    add, j, j, 1
+    goto, L1
+L2:
+    add, i, i, 1
+    goto, L0
+EOI:
+    array_store, 1, v, 0
+    array_store, 0, q, 0
+    assign, ii, 0
+    assign, i, ii
+    assign, j, 1
+L3:
+    breq, FIN, i, j
+    array_load, now, q, i
+    add, ii, i, 1
+    assign, i, ii
+    array_load, c, en, now
+    assign, k, 0
+L4:
+    brgeq, L5, k, c
+    mult, t, m, now
+    add, t, t, k
+    array_load, x, e, t
+    array_load, tv, v, x
+    breq, L6, tv, 1
+    array_store, 1, v, x
+    array_store, x, q, j
+    add, j, j, 1
+L6:
+    add, k, k, 1
+    goto, L4
+L5:
+    goto, L3
+FIN:
+    assign, ii, 0
+    assign, i, ii
+L7:
+    breq, L8, i, j
+    array_load, x, q, i
+    call, puti, x
     call, putc, 10
-#end_function
-
-#start_function
-int sampleFunc2(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, int l, int m, int n, int o, int p, int q, int r, int s, int t, int u, int v, int w, int x, int y, int z):
-int-list: temp, count
-float-list: 
-    assign, temp, 0
-    assign, count, 1
-loop:
-    breq, end, count, 0
-    add, temp, temp, a
-    add, temp, temp, b
-    add, temp, temp, c
-    add, temp, temp, d
-    add, temp, temp, e
-    add, temp, temp, f
-    add, temp, temp, g
-    add, temp, temp, h
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-end:
-    return, temp
-#end_function
-
-#start_function
-int sampleFunc(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k, int l, int m, int n, int o, int p, int q, int r, int s, int t, int u, int v, int w, int x, int y, int z):
-int-list: temp, count
-float-list: 
-    assign, temp, 0
-    callr, count, geti
-loop:
-    call, puti, count
-    breq, end, count, 0
-    sub, count, count, 1
-    add, temp, temp, a
-    add, temp, temp, b
-    add, temp, temp, c
-    add, temp, temp, d
-    add, temp, temp, e
-    add, temp, temp, f
-    add, temp, temp, g
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    assign, temp, temp
-    goto, loop
-end:
-    callr, count, sampleFunc2, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
-    add, temp, temp, count
-    return, temp
+    add, ii, i, 1
+    assign, i, ii
+    goto, L7
+L8:
 #end_function
 
